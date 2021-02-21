@@ -26,11 +26,22 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <h2>выключение</h2>
 Выполните команду: <b>sudo shutdown -h now</b>
 
+<h2>для удобного переброса файлов через ZMODEM</h2>
+Выполните команду: <b>sudo apt-get install lrzsz</b>
+
+<h2>глянуть по свободе есть ли в этом смысл</h2>
+<a href="https://github.com/pi-hole/pi-hole/#one-step-automated-install">Pi-hole</a>
+
 <h1>HARD</h1>
 
 <h2>pinout</h2>
-<img src="https://github.com/RusikOk/board-STM32F411RET6-Terraelectronica/blob/main/6_%D1%84%D0%BE%D1%82%D0%BE/terraelectronica%20TE-STM32F103RET6%20KIT%20v100%20top.jpg" alt="">
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/1_%D1%81%D1%85%D0%B5%D0%BC%D1%8B/RaspberryPi2_pinout.png" alt="">
 
 <h2>OLED на контроллере SSD1306</h2>
 <a href="https://learn.adafruit.com/adafruit-pioled-128x32-mini-oled-for-raspberry-pi/usage">мануал</a>
+<br>
 <a href="https://github.com/adafruit/Adafruit_CircuitPython_SSD1306/tree/master/examples">примеры</a>
+
+<h2>кнопки</h2>
+<a href="https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/digital-i-o">примеры</a>
+<br>
