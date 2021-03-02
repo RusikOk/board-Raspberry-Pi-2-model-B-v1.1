@@ -10,7 +10,7 @@
 # rusikok PRI3 enable UART
 <br>
 enable_uart=1
-<br>
+<br><br>
 ссылки:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a>
 
@@ -39,8 +39,8 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <h2>для удобного переброса файлов через ZMODEM</h2>
 Выполните команду: <b>sudo apt-get install lrzsz</b>
 
-качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_arm.tgz">J-Link utilities</a> <br>
 <h2>запуск J-Link Server</h2>
+качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_arm.tgz">J-Link utilities</a> <br>
 роспаковуем в каталог пользователя /home/pi/JLink_Linux_V696_arm <br>
 на всякий случай читаем	README.txt <br>
 добавляем правила <b>sudo cp 99-jlink.rules /etc/udev/rules.d/</b><br>
@@ -54,7 +54,26 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <br>
 <a href="https://forum.segger.com/index.php/Thread/5693-SOLVED-J-Link-Remote-Server-on-Raspberry-Pi/">J-Link Remote Server on Raspberry-Pi</a>
 <br>
-<a href="">J-Link User Manual</a>
+<a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/jLink%20manual%20UM08001.pdf">J-Link User Manual</a>
+
+<h2>проброс последовательных портов через сеть</h2>
+установка сервиса <b>sudo apt-get install ser2net</b><br>
+правим конфиг <b>/etc/ser2net.conf</b> <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/ser2net.conf">сам конфиг</a> <br>
+перезагружаем службу <b>sudo service ser2net restart</b> <br>
+
+
+
+<b></b> <br>
+
+
+<br><br>
+ссылки:<br>
+<a href="http://security-corp.org/os/linux/892-probros-com-portov-iz-linux-v-windows.html">Проброс COM-портов из Linux в Windows</a>
+<br>
+<a href="https://networklessons.com/network-management/raspberry-pi-as-cisco-console-server/">Raspberry Pi as Cisco Console Server</a>
+<br>
+<a href="https://linux.die.net/man/8/ser2net">ser2net(8) - Linux man page</a>
+
 
 <h2>сеть</h2>
 посмотреть настройки всех сетевых интерфейсов <b>ip a</b> или только LAN <b>ip addr show eth0</b><br> 
