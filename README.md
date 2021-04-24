@@ -6,9 +6,8 @@
 <h2>консоль</h2>
 
 <h3>UART</h3>
-в самом конце файла config.txt дописать следующее:<br>
-# rusikok PRI3 enable UART
-<br>
+в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
+# rusikok PRI3 enable UART<br>
 enable_uart=1
 <br><br>
 ссылки:<br>
@@ -27,6 +26,15 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <br>
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
+<h2>установка стандартного для меня софта</h2>
+синхронизации файлов описаний пакетов с репозитарием: <b>sudo apt-get update</b><br>
+установка новейших версий всех установленных пакетов системы: <b>sudo apt-get upgrade</b><br>
+Midnight Commander: <b>sudo apt-get install mc</b><br>
+диспетчер задач: <b>sudo apt-get install htop</b><br>
+ZMODEM: <b>sudo apt-get install lrzsz</b><br>
+: <b>sudo apt-get install </b><br>
+: <b>sudo apt-get install </b><br>
+
 <h2>мониторинг параметров HW системы</h2>
 команда <b>dmesg</b> покажет сообщения ядра<br>
 <a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a>
@@ -36,8 +44,14 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <h2>выключение</h2>
 Выполните команду: <b>sudo shutdown -h now</b>
 
-<h2>для удобного переброса файлов через ZMODEM</h2>
-Выполните команду: <b>sudo apt-get install lrzsz</b>
+<h2>для удобного переброса файлов через SSH терминал</h2>
+установка пакета: <b>sudo apt-get install lrzsz</b><br>
+получение файла: <b>sz [filename]</b><br>
+отправка файла: <b>rz</b><br>
+также можно просто перетянуть файл в терминал
+<br><br>
+ссылки:<br>
+<a href="https://russianblogs.com/article/7328815997/">Лучший способ закачивать и скачивать файлы Linux под Windows</a><br>
 
 <h2>запуск J-Link Server</h2>
 качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_arm.tgz">J-Link utilities</a> <br>
@@ -62,7 +76,7 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 перезагружаем службу <b>sudo service ser2net restart</b> <br>
 
 
-
+почитать https://www.linux.org.ru/forum/development/15402226
 <b></b> <br>
 
 
@@ -73,7 +87,8 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <a href="https://networklessons.com/network-management/raspberry-pi-as-cisco-console-server/">Raspberry Pi as Cisco Console Server</a>
 <br>
 <a href="https://linux.die.net/man/8/ser2net">ser2net(8) - Linux man page</a>
-
+<br>
+<a href="https://github.com/qchats/ser2net/blob/master/ser2net.conf">исходники ser2net</a>
 
 <h2>сеть</h2>
 посмотреть настройки всех сетевых интерфейсов <b>ip a</b> или только LAN <b>ip addr show eth0</b><br> 
@@ -85,7 +100,7 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <h1>HARD</h1>
 
 <h2>pinout</h2>
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/1_%D1%81%D1%85%D0%B5%D0%BC%D1%8B/RaspberryPi2_pinout.png" alt="">
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/1_%D1%81%D1%85%D0%B5%D0%BC%D1%8B/RaspberryPi2_pinout.png">
 <br>
 <a href="https://pinout.xyz/#">отличная шпора по пинам</a>
 
@@ -97,3 +112,31 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <h2>кнопки</h2>
 <a href="https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/digital-i-o">примеры</a>
 <br>
+
+<h2>RTC на DS3231</h2>
+проверка текущего времени: <b>timedatectl</b><br>
+установка часового пояса: <b>sudo timedatectl set-timezone Europe/Kiev</b><br>
+все доступные часовые пояса в системе можно подсмотреть в дирректории: <b>/usr/share/zoneinfo</b><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231toRPI.webp" alt="подключение часов к RPi">
+проверка правильности подключения часов? адрес 0x68: <b>i2cdetect -y 1</b><br>
+проверить наличие драйвера: <b>/drivers/rtc/rtc-ds3231.c</b><br>
+в самом конце файла <b>/boot/config.txt</b> добавляем загрузку драйвера RTC ядром:<br>
+# rusikok RTC definition<br>
+dtoverlay=i2c-rtc,ds3231<br>
+<br>
+ребутнем систему: <b>sudo reboot</b><br>
+проверка запуска драйвера часов? адрес 0x68 -> 0xUU: <b>i2cdetect -y 1</b><br>
+проверить какие конкретно модули ядра сейчас загружены: <b>lsmod</b><br>
+удаляем пакет фейк часов: <b>sudo apt-get remove fake-hwclock</b><br>
+удаляем сценарий инициализации: <b>sudo update-rc.d -f fake-hwclock remove</b><br>
+отключаем службу фейк часов: <b>sudo systemctl disable fake-hwclock</b><br>
+привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a>
+посмотреть время из RTC: <b>sudo hwclock</b><br>
+обновить системное время данными из RTC: <b>sudo hwclock --hctosys</b><br>
+записать системное время в RTC: <b>sudo hwclock --systohc</b><br>
+: <b></b><br>
+
+<br><br>
+ссылки:<br>
+<a href="https://arduinoplus.ru/rtc-raspberry-pi/">Как добавить модуль RTC к Raspberry Pi</a><br>
+<a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231_RU.pdf">DS3231 datasheet на русском</a><br>
