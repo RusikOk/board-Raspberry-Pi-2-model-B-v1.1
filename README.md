@@ -7,11 +7,12 @@
 
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
-# rusikok PRI3 enable UART<br>
-enable_uart=1
-<br><br>
+> # rusikok PRI3 enable UART<br>
+> enable_uart=1<br>
+<br>
 ссылки:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a>
+<a href="http://wikihandbk.com/wiki/Raspberry_Pi:%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0/config.txt">Raspberry Pi:Настройка/config.txt</a><br>
 
 <h3>SSH</h3>
 
@@ -118,25 +119,31 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 установка часового пояса: <b>sudo timedatectl set-timezone Europe/Kiev</b><br>
 все доступные часовые пояса в системе можно подсмотреть в дирректории: <b>/usr/share/zoneinfo</b><br>
 <img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231toRPI.webp" alt="подключение часов к RPi">
-проверка правильности подключения часов? адрес 0x68: <b>i2cdetect -y 1</b><br>
-проверить наличие драйвера: <b>/drivers/rtc/rtc-ds3231.c</b><br>
+проверка правильности подключения часов. адрес 0x68: <b>i2cdetect -y 1</b><br>
+сейчас можно вычитать всю память микросхемы: <b>i2cdump -y 1 0x68</b><br>
+проверить наличие драйвера: <b>/lib/modules/5.10.17-v7+/kernel/drivers/rtc/rtc-ds1307.ko</b> да! странно но для DS3231 драйвер называется именно так<br>
 в самом конце файла <b>/boot/config.txt</b> добавляем загрузку драйвера RTC ядром:<br>
-# rusikok RTC definition<br>
-dtoverlay=i2c-rtc,ds3231<br>
-<br>
+> # rusikok RTC definition<br>
+> dtoverlay=i2c-rtc,ds3231<br>
 ребутнем систему: <b>sudo reboot</b><br>
-проверка запуска драйвера часов? адрес 0x68 -> 0xUU: <b>i2cdetect -y 1</b><br>
+проверка запуска драйвера часов. адрес 0x68 -> 0xUU: <b>i2cdetect -y 1</b><br>
 проверить какие конкретно модули ядра сейчас загружены: <b>lsmod</b><br>
+установка поддержки датчика температуры часов: <b>sudo apt-get install lm-sensors</b><br>
+проверить датчик температуры DS3231: <b>sensors</b><br>
 удаляем пакет фейк часов: <b>sudo apt-get remove fake-hwclock</b><br>
 удаляем сценарий инициализации: <b>sudo update-rc.d -f fake-hwclock remove</b><br>
 отключаем службу фейк часов: <b>sudo systemctl disable fake-hwclock</b><br>
-привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a>
+привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a><br>
+проверить состояние аппаратных часов: <b>sudo hwclock -- verbose -r</b><br>
 посмотреть время из RTC: <b>sudo hwclock</b><br>
 обновить системное время данными из RTC: <b>sudo hwclock --hctosys</b><br>
 записать системное время в RTC: <b>sudo hwclock --systohc</b><br>
-: <b></b><br>
-
-<br><br>
+по желанию можно отключить NTP но я не стал: <b>sudo update-rc.d ntp disable</b><br>
+<br>
 ссылки:<br>
 <a href="https://arduinoplus.ru/rtc-raspberry-pi/">Как добавить модуль RTC к Raspberry Pi</a><br>
+<a href="https://onxblog.com/2019/03/30/raspberry-pi-hw-clock-ds3231/">Часы реального времени DS3231 PI</a><br>
+<a href="https://blablacode.ru/linux/581">I2c в Linux из пространства пользователя</a><br>
+<a href="https://www.raspberrypi.org/forums/viewtopic.php?p=1138858&sid=78cfd3416e0f02ddfd575a98ea15198d#p1138858">ds3231 clock temperature sensor access</a><br>
 <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231_RU.pdf">DS3231 datasheet на русском</a><br>
+<a href="http://wikihandbk.com/wiki/Raspberry_Pi:%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0/config.txt">Raspberry Pi:Настройка/config.txt</a><br>
