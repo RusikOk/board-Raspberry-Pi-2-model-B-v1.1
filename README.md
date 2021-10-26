@@ -7,8 +7,10 @@
 
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
-> # rusikok PRI3 enable UART<br>
-> enable_uart=1<br>
+```ini
+# rusikok PRI3 enable UART<br>
+enable_uart=1<br>
+```
 <br>
 ссылки:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a>
@@ -30,10 +32,10 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 <h2>установка стандартного для меня софта</h2>
 синхронизации файлов описаний пакетов с репозитарием: <b>sudo apt-get update</b><br>
 установка новейших версий всех установленных пакетов системы: <b>sudo apt-get upgrade</b><br>
+проверить установлен пакет или нет можно командой: <b>apt-cache policy [ИмяПакета]</b><br>
 Midnight Commander: <b>sudo apt-get install mc</b><br>
 диспетчер задач: <b>sudo apt-get install htop</b><br>
 ZMODEM: <b>sudo apt-get install lrzsz</b><br>
-: <b>sudo apt-get install </b><br>
 : <b>sudo apt-get install </b><br>
 
 <h2>мониторинг параметров HW системы</h2>
@@ -42,8 +44,12 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <br>
 <a href="https://github.com/bamarni/pi64/issues/4#issuecomment-292707581">скрипт мониторинга</a>
 
-<h2>выключение</h2>
-Выполните команду: <b>sudo shutdown -h now</b>
+<h2>питание</h2>
+выключить сейчас: <b>sudo shutdown -h now</b><br>
+выключить в 15:15: <b>sudo shutdown -h 15:15</b><br>
+выключить через 15 минут: <b>sudo shutdown -h +15</b><br>
+отмена запланированных действий: <b>sudo shutdown -с</b><br>
+перезагрузить сейчас: <b>sudo shutdown -r now</b><br>
 
 <h2>для удобного переброса файлов через SSH терминал</h2>
 установка пакета: <b>sudo apt-get install lrzsz</b><br>
@@ -123,8 +129,10 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 сейчас можно вычитать всю память микросхемы: <b>i2cdump -y 1 0x68</b><br>
 проверить наличие драйвера: <b>/lib/modules/5.10.17-v7+/kernel/drivers/rtc/rtc-ds1307.ko</b> да! странно но для DS3231 драйвер называется именно так<br>
 в самом конце файла <b>/boot/config.txt</b> добавляем загрузку драйвера RTC ядром:<br>
-> # rusikok RTC definition<br>
-> dtoverlay=i2c-rtc,ds3231<br>
+```html
+# rusikok RTC definition<br>
+dtoverlay=i2c-rtc,ds3231<br>
+```
 ребутнем систему: <b>sudo reboot</b><br>
 проверка запуска драйвера часов. адрес 0x68 -> 0xUU: <b>i2cdetect -y 1</b><br>
 проверить какие конкретно модули ядра сейчас загружены: <b>lsmod</b><br>
@@ -134,7 +142,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 удаляем сценарий инициализации: <b>sudo update-rc.d -f fake-hwclock remove</b><br>
 отключаем службу фейк часов: <b>sudo systemctl disable fake-hwclock</b><br>
 привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a><br>
-проверить состояние аппаратных часов: <b>sudo hwclock -- verbose -r</b><br>
+проверить состояние аппаратных часов: <b>sudo hwclock --verbose -r</b><br>
 посмотреть время из RTC: <b>sudo hwclock</b><br>
 обновить системное время данными из RTC: <b>sudo hwclock --hctosys</b><br>
 записать системное время в RTC: <b>sudo hwclock --systohc</b><br>
