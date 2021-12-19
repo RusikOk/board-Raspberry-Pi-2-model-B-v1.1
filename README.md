@@ -12,7 +12,7 @@
 # rusikok PRI3 enable UART
 enable_uart=1
 ```
-<br>
+
 ссылки:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a><br>
 <a href="http://wikihandbk.com/wiki/Raspberry_Pi:%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0/config.txt">Raspberry Pi:Настройка/config.txt</a><br>
@@ -26,7 +26,13 @@ enable_uart=1
 raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 
 <h2>аутентификация</h2>
-В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — ` pi `, а пароль по умолчанию — ` raspberry`, но для большинства дистрибутивов это далеко не стандарт.
+В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — 
+` pi `
+, а пароль по умолчанию — 
+
+` raspberry`
+
+, но для большинства дистрибутивов это далеко не стандарт.
 <br>
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
