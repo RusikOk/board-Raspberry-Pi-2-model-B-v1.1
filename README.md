@@ -7,6 +7,7 @@
 
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:
+
 ```ini
 # rusikok PRI3 enable UART
 enable_uart=1
@@ -25,7 +26,7 @@ enable_uart=1
 raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 
 <h2>аутентификация</h2>
-В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — <b>pi</b>, а пароль по умолчанию — <b>raspberry</b>, но для большинства дистрибутивов это далеко не стандарт.
+В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — `pi`, а пароль по умолчанию — `raspberry`, но для большинства дистрибутивов это далеко не стандарт.
 <br>
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
