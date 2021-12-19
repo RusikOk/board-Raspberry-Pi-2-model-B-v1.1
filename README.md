@@ -11,6 +11,18 @@
 # rusikok PRI3 enable UART
 enable_uart=1
 '
+
+
+
+
+
+
+
+«`название-языка блок кода«`
+
+
+
+
 <br>
 ссылки:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a><br>
