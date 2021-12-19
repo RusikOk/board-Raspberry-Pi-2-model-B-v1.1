@@ -9,7 +9,7 @@
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
 
 ```
-rusikok PRI3 enable UART
+#rusikok PRI3 enable UART
 enable_uart=1
 ```
 
