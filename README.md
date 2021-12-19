@@ -7,8 +7,8 @@
 
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
-```php 
-_# rusikok PRI3 enable UART
+```
+// rusikok PRI3 enable UART
 enable_uart=1
 ```
 
@@ -24,7 +24,7 @@ enable_uart=1
 
 ```ini <br>название-языка<br> блок<br> кода```
 
-```C 
+``` C 
 название-языка
 блок
 кода
