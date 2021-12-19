@@ -6,8 +6,7 @@
 <h2>консоль</h2>
 
 <h3>UART</h3>
-в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
-
+в самом конце файла <b>/boot/config.txt</b> дописать следующее:
 ```ini
 # rusikok PRI3 enable UART
 enable_uart=1
@@ -130,9 +129,10 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 сейчас можно вычитать всю память микросхемы: <b>i2cdump -y 1 0x68</b><br>
 проверить наличие драйвера: <b>/lib/modules/5.10.17-v7+/kernel/drivers/rtc/rtc-ds1307.ko</b> да! странно но для DS3231 драйвер называется именно так<br>
 в самом конце файла <b>/boot/config.txt</b> добавляем загрузку драйвера RTC ядром:<br>
-```html
-# rusikok RTC definition<br>
-dtoverlay=i2c-rtc,ds3231<br>
+
+```ini
+# rusikok RTC definition
+dtoverlay=i2c-rtc,ds3231
 ```
 ребутнем систему: <b>sudo reboot</b><br>
 проверка запуска драйвера часов. адрес 0x68 -> 0xUU: <b>i2cdetect -y 1</b><br>
