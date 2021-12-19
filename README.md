@@ -7,13 +7,13 @@
 
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
-```ini
+'''html
 # rusikok PRI3 enable UART<br>
 enable_uart=1<br>
-```
+'''
 <br>
 ссылки:<br>
-<a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a>
+<a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a><br>
 <a href="http://wikihandbk.com/wiki/Raspberry_Pi:%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0/config.txt">Raspberry Pi:Настройка/config.txt</a><br>
 
 <h3>SSH</h3>
