@@ -7,10 +7,10 @@
 
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
-'html 
+`html 
 # rusikok PRI3 enable UART
 enable_uart=1
-'
+`
 
 
 
@@ -18,7 +18,7 @@ enable_uart=1
 
 
 
-«`название-языка блок кода«`
+`название-языка блок кода`
 
 
 
