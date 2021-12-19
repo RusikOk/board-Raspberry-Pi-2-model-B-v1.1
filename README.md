@@ -8,31 +8,10 @@
 <h3>UART</h3>
 в самом конце файла <b>/boot/config.txt</b> дописать следующее:<br>
 
-```
+```ini
 # rusikok PRI3 enable UART
 enable_uart=1
 ```
-
-
-
-
-
-
-
-`ini название-языка блок кода`
-
-<br>
-
-```ini <br>название-языка<br> блок<br> кода```
-
-``` C 
-название-языка
-блок
-кода
-```
-
-
-
 <br>
 ссылки:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a><br>
