@@ -26,13 +26,7 @@ enable_uart=1
 raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 
 <h2>аутентификация</h2>
-В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — 
-` pi `
-, а пароль по умолчанию — 
-
-` raspberry`
-
-, но для большинства дистрибутивов это далеко не стандарт.
+В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — <b>pi</b>, а пароль по умолчанию — <b>raspberry</b>, но для большинства дистрибутивов это далеко не стандарт.
 <br>
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
@@ -43,13 +37,17 @@ raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 Midnight Commander: <b>sudo apt-get install mc</b><br>
 диспетчер задач: <b>sudo apt-get install htop</b><br>
 ZMODEM: <b>sudo apt-get install lrzsz</b><br>
-: <b>sudo apt-get install </b><br>
 
 <h2>мониторинг параметров HW системы</h2>
 команда <b>dmesg</b> покажет сообщения ядра<br>
-<a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a>
+температура SoC <b>vcgencmd measure_temp | cut -f2 -d= | sed 's/000//'</b><br>
+текущая тактовая частота SoC <b>vcgencmd measure_clock arm | awk -F\"=\" '{printf (\"%0.0f\",$2/1000000); }'</b><br>
+текущее напряжение ядра SoC <b>vcgencmd measure_volts | cut -f2 -d= | sed 's/000//'</b><br>
+состояние тротлинга ядра <b>vcgencmd get_throttled | cut -f2 -d=</b><br>
+аптайм системы <b>uptime -p</b><br>
 <br>
-<a href="https://github.com/bamarni/pi64/issues/4#issuecomment-292707581">скрипт мониторинга</a>
+<a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a><br>
+<a href="https://github.com/bamarni/pi64/issues/4#issuecomment-292707581">скрипт мониторинга</a><br>
 
 <h2>питание</h2>
 выключить сейчас: <b>sudo shutdown -h now</b><br>
@@ -94,7 +92,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <b></b> <br>
 
 
-<br><br>
+<br>
 ссылки:<br>
 <a href="http://security-corp.org/os/linux/892-probros-com-portov-iz-linux-v-windows.html">Проброс COM-портов из Linux в Windows</a>
 <br>
@@ -119,9 +117,17 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <a href="https://pinout.xyz/#">отличная шпора по пинам</a>
 
 <h2>OLED на контроллере SSD1306</h2>
-<a href="https://learn.adafruit.com/adafruit-pioled-128x32-mini-oled-for-raspberry-pi/usage">мануал</a>
+запуск скрипта: <b>sudo python3 stats.py</b><br>
+в самом конце файла <b>/etc/rc.local</b> добавляем вызов скрипта в фоновом режиме:<br>
+
+```ini
+# rusikok start OLED menu
+python3 /home/pi/stats.py &
+```
+
 <br>
-<a href="https://github.com/adafruit/Adafruit_CircuitPython_SSD1306/tree/master/examples">примеры</a>
+<a href="https://learn.adafruit.com/adafruit-pioled-128x32-mini-oled-for-raspberry-pi/usage">мануал</a><br>
+<a href="https://github.com/adafruit/Adafruit_CircuitPython_SSD1306/tree/master/examples">примеры</a><br>
 
 <h2>кнопки</h2>
 <a href="https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/digital-i-o">примеры</a>
@@ -141,6 +147,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 # rusikok RTC definition
 dtoverlay=i2c-rtc,ds3231
 ```
+
 ребутнем систему: <b>sudo reboot</b><br>
 проверка запуска драйвера часов. адрес 0x68 -> 0xUU: <b>i2cdetect -y 1</b><br>
 проверить какие конкретно модули ядра сейчас загружены: <b>lsmod</b><br>
