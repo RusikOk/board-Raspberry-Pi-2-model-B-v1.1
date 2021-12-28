@@ -132,8 +132,8 @@ while True:
         text0 = "DATE: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "date +\"%T\""
         text1 = "TIME: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
-        cmd = "uptime -p"
-        text2 = "UPTIME: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
+        cmd = "uptime | awk -F'( |,|:)+' '{d=h=m=0; if ($7==\"min\") m=$6; else {if ($7~/^day/) {d=$6;h=$8;m=$9} else {h=$6;m=$7}}} {print d+0,\"days,\",h+0,\":\",m+0}'"
+        text2 = "UP: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "uptime -p"
         text3 = "" + subprocess.check_output(cmd, shell=True).decode("utf-8")
 

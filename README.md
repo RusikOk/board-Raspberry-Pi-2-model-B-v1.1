@@ -40,12 +40,13 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 
 <h2>мониторинг параметров HW системы</h2>
 команда <b>dmesg</b> покажет сообщения ядра<br>
-температура SoC <b>vcgencmd measure_temp | cut -f2 -d= | sed 's/000//'</b><br>
-текущая тактовая частота SoC <b>vcgencmd measure_clock arm | awk -F\"=\" '{printf (\"%0.0f\",$2/1000000); }'</b><br>
-текущее напряжение ядра SoC <b>vcgencmd measure_volts | cut -f2 -d= | sed 's/000//'</b><br>
-состояние тротлинга ядра <b>vcgencmd get_throttled | cut -f2 -d=</b><br>
-аптайм системы <b>uptime -p</b><br>
+температура SoC: <b>vcgencmd measure_temp | cut -f2 -d= | sed 's/000//'</b><br>
+текущая тактовая частота SoC: <b>vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }'</b><br>
+текущее напряжение ядра SoC: <b>vcgencmd measure_volts | cut -f2 -d= | sed 's/000//'</b><br>
+состояние тротлинга ядра: <b>vcgencmd get_throttled | cut -f2 -d=</b><br>
+аптайм системы: <b>uptime | awk -F'( |,|:)+' '{d=h=m=0; if ($7=="min") m=$6; else {if ($7~/^day/) {d=$6;h=$8;m=$9} else {h=$6;m=$7}}} {print d+0,"days,",h+0,":",m+0}'</b><br>
 <br>
+ссылки:<br>
 <a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a><br>
 <a href="https://github.com/bamarni/pi64/issues/4#issuecomment-292707581">скрипт мониторинга</a><br>
 
@@ -60,8 +61,8 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 установка пакета: <b>sudo apt-get install lrzsz</b><br>
 получение файла: <b>sz [filename]</b><br>
 отправка файла: <b>rz</b><br>
-также можно просто перетянуть файл в терминал
-<br><br>
+также можно просто перетянуть файл в терминал<br>
+<br>
 ссылки:<br>
 <a href="https://russianblogs.com/article/7328815997/">Лучший способ закачивать и скачивать файлы Linux под Windows</a><br>
 
@@ -117,15 +118,15 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <a href="https://pinout.xyz/#">отличная шпора по пинам</a>
 
 <h2>OLED на контроллере SSD1306</h2>
-запуск скрипта: <b>sudo python3 stats.py</b><br>
-в самом конце файла <b>/etc/rc.local</b> добавляем вызов скрипта в фоновом режиме:<br>
+запуск скрипта вручную: <b>python3 stats.py</b><br>
+в самом конце файла <b>/etc/rc.local</b> добавляем вызов скрипта в фоновом режиме после загрузки:<br>
 
 ```ini
 # rusikok start OLED menu
 python3 /home/pi/stats.py &
 ```
 
-<br>
+ссылки:<br>
 <a href="https://learn.adafruit.com/adafruit-pioled-128x32-mini-oled-for-raspberry-pi/usage">мануал</a><br>
 <a href="https://github.com/adafruit/Adafruit_CircuitPython_SSD1306/tree/master/examples">примеры</a><br>
 
@@ -143,7 +144,7 @@ python3 /home/pi/stats.py &
 проверить наличие драйвера: <b>/lib/modules/5.10.17-v7+/kernel/drivers/rtc/rtc-ds1307.ko</b> да! странно но для DS3231 драйвер называется именно так<br>
 в самом конце файла <b>/boot/config.txt</b> добавляем загрузку драйвера RTC ядром:<br>
 
-```ini
+```sh
 # rusikok RTC definition
 dtoverlay=i2c-rtc,ds3231
 ```
