@@ -1,6 +1,8 @@
 # board-Raspberry-Pi-2-model-B-v1.1
 полезные штуки в одном месте для удобства работы с малиной
 
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/P11228-202955.jpg"><br>
+
 <h1>SOFT</h1>
 
 <h2>консоль</h2>
@@ -44,7 +46,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 текущая тактовая частота SoC: <b>vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }'</b><br>
 текущее напряжение ядра SoC: <b>vcgencmd measure_volts | cut -f2 -d= | sed 's/000//'</b><br>
 состояние тротлинга ядра: <b>vcgencmd get_throttled | cut -f2 -d=</b><br>
-аптайм системы: <b>uptime | awk -F'( |,|:)+' '{d=h=m=0; if ($7=="min") m=$6; else {if ($7~/^day/) {d=$6;h=$8;m=$9} else {h=$6;m=$7}}} {print d+0,"days,",h+0,":",m+0}'</b><br>
+аптайм системы: <b>uptime | awk -F'( |,|:)+' '{d=h=m=0; if ($7=="min") m=$6; else {if ($7~/^day/) {d=$6; h=$8; m=$9} else {h=$6; m=$7}}} {printf("%03u days, %02u:%02u", d, h, m)}'</b><br>
 <br>
 ссылки:<br>
 <a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a><br>
@@ -113,9 +115,8 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <h1>HARD</h1>
 
 <h2>pinout</h2>
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/1_%D1%81%D1%85%D0%B5%D0%BC%D1%8B/RaspberryPi2_pinout.png">
-<br>
-<a href="https://pinout.xyz/#">отличная шпора по пинам</a>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/1_%D1%81%D1%85%D0%B5%D0%BC%D1%8B/RaspberryPi2_pinout.png"><br>
+<a href="https://pinout.xyz/#">отличная шпора по пинам</a><br>
 
 <h2>OLED на контроллере SSD1306</h2>
 запуск скрипта вручную: <b>python3 stats.py</b><br>
