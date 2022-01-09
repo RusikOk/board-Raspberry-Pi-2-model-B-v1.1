@@ -46,7 +46,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 текущая тактовая частота SoC: <b>vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }'</b><br>
 текущее напряжение ядра SoC: <b>vcgencmd measure_volts | cut -f2 -d= | sed 's/000//'</b><br>
 состояние тротлинга ядра: <b>vcgencmd get_throttled | cut -f2 -d=</b><br>
-аптайм системы: <b>uptime | awk -F'( |,|:)+' '{d=h=m=0; if ($7=="min") m=$6; else {if ($7~/^day/) {d=$6; h=$8; m=$9} else {h=$6; m=$7}}} {printf("%03u days, %02u:%02u", d, h, m)}'</b><br>
+аптайм системы: <b>uptime | awk -F'( |,|:)+' '{d=h=m=0; if($7=="min") m=$6; else { if($7~/^day/) { d=$6; h=$8; m=$9 } else if($9=="min") { h=0; m=$8 } else { h=$6; m=$7 }}} {printf("%03u days, %02u:%02u", d, h, m)}'</b><br>
 <br>
 ссылки:<br>
 <a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a><br>
@@ -77,7 +77,13 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 ребутаем млину <br>
 подключаем jLink по USB, проверяем подключение <b>./JLink_Linux_V696_arm/JLinkExe</b> -> q <br>
 запускаем jLink Remote Server <b>sudo ./JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
-<br>
+в самом конце файла <b>/etc/rc.local</b> добавляем автозапуск программы в фоновом режиме:<br>
+
+```ini
+# rusikok jLink service start
+/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 &
+```
+
 ссылки:<br>
 <a href="https://blog.feabhas.com/2019/07/using-a-raspberry-pi-as-a-remote-headless-j-link-server/">Using a Raspberry Pi as a remote headless J-Link Server</a>
 <br>
@@ -88,29 +94,34 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <h2>проброс последовательных портов через сеть</h2>
 установка сервиса <b>sudo apt-get install ser2net</b><br>
 правим конфиг <b>/etc/ser2net.conf</b> <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/ser2net.conf">сам конфиг</a> <br>
-перезагружаем службу <b>sudo service ser2net restart</b> <br>
-
-
-почитать https://www.linux.org.ru/forum/development/15402226
-<b></b> <br>
-
-
+перезагружаем службу <b>sudo service ser2net start</b> <br>
 <br>
 ссылки:<br>
-<a href="http://security-corp.org/os/linux/892-probros-com-portov-iz-linux-v-windows.html">Проброс COM-портов из Linux в Windows</a>
-<br>
-<a href="https://networklessons.com/network-management/raspberry-pi-as-cisco-console-server/">Raspberry Pi as Cisco Console Server</a>
-<br>
-<a href="https://linux.die.net/man/8/ser2net">ser2net(8) - Linux man page</a>
-<br>
-<a href="https://github.com/qchats/ser2net/blob/master/ser2net.conf">исходники ser2net</a>
+<a href="http://security-corp.org/os/linux/892-probros-com-portov-iz-linux-v-windows.html">Проброс COM-портов из Linux в Windows</a><br>
+<a href="https://networklessons.com/network-management/raspberry-pi-as-cisco-console-server/">Raspberry Pi as Cisco Console Server</a><br>
+<a href="https://linux.die.net/man/8/ser2net">ser2net(8) - Linux man page</a><br>
+<a href="https://github.com/qchats/ser2net/blob/master/ser2net.conf">исходники ser2net</a><br>
 
 <h2>сеть</h2>
 посмотреть настройки всех сетевых интерфейсов <b>ip a</b> или только LAN <b>ip addr show eth0</b><br> 
 посмотреть открытые порты <b>sudo netstat -tulpn</b><br>
 
+<h2>настройка мобильного интернета ЕЩЕ НЕ ЗАПУСКАЛ</h2>
+<br>
+ссылки:<br>
+<a href="https://kotvaska.medium.com/internet-for-raspbery-pi-abcc46ff24f1">Internet for Raspberry Pi</a><br>
+<a href="https://robocraft.ru/blog/electronics/3131.html">Raspberry Pi. Установка и настройка комплекта MTC Коннект 4 (модем Huawei E171) на Raspbian</a><br>
+<a href="https://onedev.net/post/904">Настройка 3G/GPRS интернета утилитой Sakis3g на GSM модеме Huawei E1550</a><br>
+
+<h2>настройка клиентского L2TP подключения VPN ЕЩЕ НЕ ЗАПУСКАЛ</h2>
+регистрируем бесплатный аккаунт <a href="http://lan2lan.ru">lan2lan.ru</a>, создаем пару пользователей<br>
+<br>
+ссылки:<br>
+<a href="https://www.umgum.com/debian-linux-l2tp-ipsec">Linux Debian + L2TP + IPsec</a><br>
+<a href="https://adminvps.ru/blog/ustanovka-i-nastrojka-l2tp-ipsec-na-debian-ubuntu-iphone-mac-dlya-vpn/">Установка и настройка l2tp + ipsec на Debian</a><br>
+
 <h2>глянуть по свободе есть ли в этом смысл</h2>
-<a href="https://github.com/pi-hole/pi-hole/#one-step-automated-install">Pi-hole</a>
+<a href="https://github.com/pi-hole/pi-hole/#one-step-automated-install">Pi-hole</a><br>
 
 <h1>HARD</h1>
 
@@ -145,7 +156,7 @@ python3 /home/pi/stats.py &
 проверить наличие драйвера: <b>/lib/modules/5.10.17-v7+/kernel/drivers/rtc/rtc-ds1307.ko</b> да! странно но для DS3231 драйвер называется именно так<br>
 в самом конце файла <b>/boot/config.txt</b> добавляем загрузку драйвера RTC ядром:<br>
 
-```sh
+```ini
 # rusikok RTC definition
 dtoverlay=i2c-rtc,ds3231
 ```

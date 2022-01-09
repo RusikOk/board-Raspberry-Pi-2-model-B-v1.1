@@ -83,7 +83,7 @@ while True:
 
     # активация хранителя экрана после 1000 циклов обновления. не точно но это не принципиально
     sleepIndex = sleepIndex + 1
-    if sleepIndex > 1000:
+    if sleepIndex > 10000:
     	scrollIndex = 0
 
     # отображаем страницы с различной системной информацией
@@ -113,10 +113,25 @@ while True:
         cmd = "vcgencmd get_throttled | cut -f2 -d="
         text3 = "throttled: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
     elif scrollIndex == 3:
-    	text0 = ""
-    	text1 = ""
-    	text2 = ""
-    	text3 = "scroolIndex = 3"
+        cmd = "ip a | grep \"  inet \" | head -n 4 | cut -d \" \" -f 6 | cut -d / -f 1"
+        str = subprocess.check_output(cmd, shell=True).decode("utf-8")
+        # разбиваем полученные из консоли данные на список построчно
+        list = []
+        for line in str.split("\n"):
+            if not line.strip():
+                continue
+            list.append(line.lstrip())
+            #print(list)
+        # костыль, чтобы избежать попытки доступа к несуществующему элементу списка
+        list.append(" -- // -- ")
+        list.append(" -- // -- ")
+        list.append(" -- // -- ")
+        list.append(" -- // -- ")
+        # тасуем список по переменным для вывода
+        text0 = "IP0: " + list[0]
+        text1 = "IP1: " + list[1]
+        text2 = "IP2: " + list[2]
+        text3 = "IP3: " + list[3]
     elif scrollIndex == 4:
     	text0 = "S H U T D O W N"
     	text1 = "S H U T D O W N"
@@ -132,7 +147,7 @@ while True:
         text0 = "DATE: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "date +\"%T\""
         text1 = "TIME: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
-        cmd = "uptime | awk -F'( |,|:)+' '{d=h=m=0; if ($7==\"min\") m=$6; else {if ($7~/^day/) {d=$6; h=$8; m=$9} else {h=$6; m=$7}}} {printf(\"  %03u days, %02u:%02u\", d, h, m)}'"
+        cmd = "uptime | awk -F'( |,|:)+' '{d=h=m=0; if($7==\"min\") m=$6; else { if($7~/^day/) { d=$6; h=$8; m=$9 } else if($9==\"min\") { h=0; m=$8 } else { h=$6; m=$7 }}} {printf(\"%03u days, %02u:%02u\", d, h, m)}'"
         text2 = "UP: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "uptime -p"
         text3 = "" + subprocess.check_output(cmd, shell=True).decode("utf-8")
@@ -158,6 +173,6 @@ while True:
     i = i + 1
     if i > height:
     	i = 0
-    disp.pixel(127, i, 1) # вывод пикселя
+    disp.pixel(127, i, 1) # вывод падающего пикселя в конце дисплея
     disp.show()
     time.sleep(0.1)
