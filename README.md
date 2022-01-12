@@ -80,8 +80,8 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 в самом конце файла <b>/etc/rc.local</b> добавляем автозапуск программы в фоновом режиме:<br>
 
 ```ini
-# rusikok jLink service start
-/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 &
+# rusikok jLink remote server start
+/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/rusikok/jLinkRS/%Y-%m-%d_%H-%M.log") &
 ```
 
 ссылки:<br>
@@ -91,10 +91,29 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <br>
 <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/jLink%20manual%20UM08001.pdf">J-Link User Manual</a>
 
+<h2>работа с последовательными портами</h2>
+посмотреть текущие настройки порта <b>stty -F /dev/ttyUSB0 -a</b><br>
+устанавливаем настройки порта <b>stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb</b> (настройку нужно производить после открытия)<br>
+создаем пару каталогов для лог файлов <b>sudo mkdir /var/log/rusikok /var/log/rusikok/tty</b><br>
+перенаправляем вывод порта в файл <b>cat /dev/ttyUSB0 > "$(date +"/home/pi/ttyUSB0_%Y-%m-%d_%H-%M.log")" &</b><br>
+в самом конце файла <b>/etc/rc.local</b> добавляем логирование в автозагрузку:<br>
+
+```ini
+# rusikok start logging serial port data
+cat /dev/ttyUSB0 > $(date +"/var/log/rusikok/tty/ttyUSB0_%Y-%m-%d_%H-%M.log") &
+stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
+```
+
+ссылки:<br>
+<a href="https://qastack.ru/unix/242778/what-is-the-easiest-way-to-configure-serial-port-on-linux">самый простой способ настроить последовательный порт в Linux</a><br>
+<a href="https://www.cyberforum.ru/shell/thread1948807.html">Перенаправление потока в файл</a><br>
+
 <h2>проброс последовательных портов через сеть</h2>
 установка сервиса <b>sudo apt-get install ser2net</b><br>
 правим конфиг <b>/etc/ser2net.conf</b> <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/ser2net.conf">сам конфиг</a> <br>
-перезагружаем службу <b>sudo service ser2net start</b> <br>
+создаем пару каталогов для лог файлов <b>sudo mkdir /var/log/rusikok /var/log/rusikok/ser2net</b><br>
+перезагружаем службу <b>sudo service ser2net start</b><br>
+подключаемся через telnet на 2000 порт с другой win машины и смотрим на вывод <b>telnet 192.168.0.7 2000</b><br>
 <br>
 ссылки:<br>
 <a href="http://security-corp.org/os/linux/892-probros-com-portov-iz-linux-v-windows.html">Проброс COM-портов из Linux в Windows</a><br>

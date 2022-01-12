@@ -20,7 +20,11 @@ fi
 # rusikok start OLED menu
 python3 /home/pi/stats.py &
 
-# rusikok jLink service start
-/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 &
+# rusikok jLink remote server start
+/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/rusikok/jLinkRS/%Y-%m-%d_%H-%M.log") &
+
+# rusikok start logging serial port data
+cat /dev/ttyUSB0 > $(date +"/var/log/rusikok/tty/ttyUSB0_%Y-%m-%d_%H-%M.log") &
+stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 
 exit 0

@@ -148,7 +148,7 @@ while True:
         cmd = "date +\"%T\""
         text1 = "TIME: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "uptime | awk -F'( |,|:)+' '{d=h=m=0; if($7==\"min\") m=$6; else { if($7~/^day/) { d=$6; h=$8; m=$9 } else if($9==\"min\") { h=0; m=$8 } else { h=$6; m=$7 }}} {printf(\"%03u days, %02u:%02u\", d, h, m)}'"
-        text2 = "UP: " + subprocess.check_output(cmd, shell=True).decode("utf-8")
+        text2 = "UP:   " + subprocess.check_output(cmd, shell=True).decode("utf-8")
         cmd = "uptime -p"
         text3 = "" + subprocess.check_output(cmd, shell=True).decode("utf-8")
 
