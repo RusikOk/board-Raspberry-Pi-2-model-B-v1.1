@@ -25,7 +25,7 @@ enable_uart=1
 Перейдите в каталог загрузки SD-карты с помощью файлового менеджера ОС. Пользователи Linux и macOS также могут сделать это из командной строки. Создайте новый пустой файл с именем ssh без расширения внутри загрузочного каталога.
 
 <h4>Включение SSH из терминала</h4>
-raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
+sudo raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
 
 <h2>аутентификация</h2>
 В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — <b>pi</b>, а пароль по умолчанию — <b>raspberry</b>, но для большинства дистрибутивов это далеко не стандарт.
@@ -75,6 +75,8 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 добавляем правила <b>sudo cp 99-jlink.rules /etc/udev/rules.d/</b><br>
 теперь можно грохнуть скачаный архив <br>
 ребутаем млину <br>
+подключаем J-Link <br>
+проверяем J-Link в списке USB устройств <b>lsusb</b> <br>
 подключаем jLink по USB, проверяем подключение <b>./JLink_Linux_V696_arm/JLinkExe</b> -> q <br>
 запускаем jLink Remote Server <b>sudo ./JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
 в самом конце файла <b>/etc/rc.local</b> добавляем автозапуск программы в фоновом режиме:<br>
@@ -139,7 +141,40 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 <a href="https://www.umgum.com/debian-linux-l2tp-ipsec">Linux Debian + L2TP + IPsec</a><br>
 <a href="https://adminvps.ru/blog/ustanovka-i-nastrojka-l2tp-ipsec-na-debian-ubuntu-iphone-mac-dlya-vpn/">Установка и настройка l2tp + ipsec на Debian</a><br>
 
+<h2>настройка клиентского OpenVPN подключения</h2>
+<h3>на стороне сервера</h3>
+запускаем <b>c:\Program Files\OpenVPN\easy-rsa\EasyRSA-Start.bat</b><br>
+генерируем ключ <b>./easyrsa gen-req [имя клиента] nopass</b><br>
+генерируем сертификат ключа <b>./easyrsa sign-req client [имя клиента]</b><br>
+формируем файл настроек для клиента <b>rpi2.ovpn</b><br>
+формируем набор файлов для клиента <b>rpi2.ovpn</b>, <b>rpi2.key</b>, <b>rpi2.crt</b>, <b>ca.crt</b>, <b>ta.key</b>, <b>dh.pem</b> и передаем его безопасным способом.
+<h3>на стороне клиента</h3>
+как всегда сначала <b>sudo apt-get update</b><br>
+потом <b>sudo apt-get upgrade</b><br>
+устанавливаем службу OpenVPN <b>sudo apt-get install openvpn</b><br>
+проверяем правильность хода RTC <b>date</b><br>
+настраиваем часовой пояс если нужно <b>sudo dpkg-reconfigure tzdata</b><br>
+переносим файлы настроек в каталог <b>/etc/openvpn/client</b><br>
+запускаем в ручном режиме и смотрим нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn</b><br>
+запускаем через системный демон <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn --daemon</b><br>
+перезапускаем службу <b>sudo service openvpn restart</b><br>
+смотрим запустилась служба или нет <b>service --status-all</b><br>
+проверяем состояние тунеля и его IP <b>ip a</b><br>
+<br>
+ссылки по настройке сервера:<br>
+<a href="https://winitpro.ru/index.php/2021/12/28/ustanovka-openvpn-servera-windows/">Установка и настройка OpenVPN сервера под Windows</a><br>
+<a href="https://internet-lab.ru/windows_openvpn_2_5_1">OpenVPN 2.5.1 сервер на Windows</a><br>
+<a href="https://habr.com/ru/post/273371/">Подробная инструкция по OpenVPN v2.3.8 на Windows server 2008R2</a><br>
+<a href="https://www.linux.org.ru/forum/admin/11912037">настроить маршрутизацию для openvp</a><br>
+ссылки по настройке клиента:<br>
+<a href="https://openvpn.net/community-downloads/">загрузка клиент/серверных программ</a><br>
+<a href="https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-linux/">Connecting to Access Server with Linux</a><br>
+<a href="https://www.ovpn.com/en/guides/raspberry-pi-raspbian">Install OpenVPN for Raspbian</a><br>
+
 <h2>глянуть по свободе есть ли в этом смысл</h2>
+<br>
+ссылки:<br>
+<a href="https://interface31.ru/tech_it/2021/04/sozdaem-sobstvennyy-filtruyushhiy-dns-server-na-baze-pi-hole.html">Создаем собственный фильтрующий DNS-сервер на базе Pi-hole</a><br>
 <a href="https://github.com/pi-hole/pi-hole/#one-step-automated-install">Pi-hole</a><br>
 
 <h1>HARD</h1>

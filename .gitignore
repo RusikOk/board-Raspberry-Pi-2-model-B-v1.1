@@ -41,3 +41,6 @@ $RECYCLE.BIN/
 *.out
 *.map
 *.o
+
+# rusikok
+*.img
