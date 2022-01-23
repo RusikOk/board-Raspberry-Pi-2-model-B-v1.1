@@ -25,7 +25,7 @@ enable_uart=1
 Перейдите в каталог загрузки SD-карты с помощью файлового менеджера ОС. Пользователи Linux и macOS также могут сделать это из командной строки. Создайте новый пустой файл с именем ssh без расширения внутри загрузочного каталога.
 
 <h4>Включение SSH из терминала</h4>
-sudo raspi-config -> Interfacing Options -> SSH -> Yes -> Entertop -> Finish
+sudo raspi-config -> Interfacing Options -> SSH -> Yes -> [Entertop] -> Finish
 
 <h2>аутентификация</h2>
 В Raspberry Pi OS (ранее известном как Raspbian), например, имя пользователя по умолчанию — <b>pi</b>, а пароль по умолчанию — <b>raspberry</b>, но для большинства дистрибутивов это далеко не стандарт.
@@ -73,10 +73,10 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 роспаковуем в каталог пользователя /home/pi/JLink_Linux_V696_arm <br>
 на всякий случай читаем	README.txt <br>
 добавляем правила <b>sudo cp 99-jlink.rules /etc/udev/rules.d/</b><br>
-теперь можно грохнуть скачаный архив <br>
-ребутаем млину <br>
+теперь можно грохнуть скачанный архив <br>
+ребутаем малину <b>sudo reboot</b><br>
 подключаем J-Link <br>
-проверяем J-Link в списке USB устройств <b>lsusb</b> <br>
+проверяем J-Link в списке USB устройств <b>lsusb</b> должны увидеть что-то типа SEGGER J-Link PLUS<br>
 подключаем jLink по USB, проверяем подключение <b>./JLink_Linux_V696_arm/JLinkExe</b> -> q <br>
 запускаем jLink Remote Server <b>sudo ./JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
 в самом конце файла <b>/etc/rc.local</b> добавляем автозапуск программы в фоновом режиме:<br>
@@ -123,29 +123,34 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 <a href="https://linux.die.net/man/8/ser2net">ser2net(8) - Linux man page</a><br>
 <a href="https://github.com/qchats/ser2net/blob/master/ser2net.conf">исходники ser2net</a><br>
 
-<h2>сеть</h2>
+<h2>сеть LAN</h2>
 посмотреть настройки всех сетевых интерфейсов <b>ip a</b> или только LAN <b>ip addr show eth0</b><br> 
 посмотреть открытые порты <b>sudo netstat -tulpn</b><br>
 
-<h2>настройка мобильного интернета ЕЩЕ НЕ ЗАПУСКАЛ</h2>
+<h2>сеть WLAN</h2>
+подключаем USB Wi-Fi сетевой интерфейс <br>
+проверяем наличие Wi-Fi адаптера в списке USB устройств <b>lsusb</b> должны увидеть что-то типа Ralink Technology, Corp. MT7601U Wireless Adapter<br>
+смотрим настройки всех сетевых интерфейсов <b>ip a</b> или только WLAN <b>ip addr show wlan0</b><br> 
+смотрим на список доступных AP <b>sudo iwlist wlan0 scan | grep ESSID</b><br> 
+задаем SSID и пароль для подключения к AP <b>sudo raspi-config -> System Options -> Wireless LAN -> [ВводимSSID] -> [Entertop] -> [ВводимПароль] -> [Entertop] -> Finish</b><br>
+если все же захотелось настроить все ручками, то лазить в <b>/etc/network/interfaces</b> не стоит. на RPi это чревато отвалом всей сети. лучше поправить <b>/etc/wpa_supplicant/wpa_supplicant.conf</b><br> 
+<br>
+ссылки:<br>
+<a href="https://vpautinu.com/wifi/raspberry-pi">Подключение и настройка интернета Wi-Fi на Raspberry Pi</a><br>
+
+<h2>настройка мобильного интернета 3G ЕЩЕ НЕ ЗАПУСКАЛ</h2>
 <br>
 ссылки:<br>
 <a href="https://kotvaska.medium.com/internet-for-raspbery-pi-abcc46ff24f1">Internet for Raspberry Pi</a><br>
 <a href="https://robocraft.ru/blog/electronics/3131.html">Raspberry Pi. Установка и настройка комплекта MTC Коннект 4 (модем Huawei E171) на Raspbian</a><br>
 <a href="https://onedev.net/post/904">Настройка 3G/GPRS интернета утилитой Sakis3g на GSM модеме Huawei E1550</a><br>
 
-<h2>настройка клиентского L2TP подключения VPN ЕЩЕ НЕ ЗАПУСКАЛ</h2>
-регистрируем бесплатный аккаунт <a href="http://lan2lan.ru">lan2lan.ru</a>, создаем пару пользователей<br>
-<br>
-ссылки:<br>
-<a href="https://www.umgum.com/debian-linux-l2tp-ipsec">Linux Debian + L2TP + IPsec</a><br>
-<a href="https://adminvps.ru/blog/ustanovka-i-nastrojka-l2tp-ipsec-na-debian-ubuntu-iphone-mac-dlya-vpn/">Установка и настройка l2tp + ipsec на Debian</a><br>
-
 <h2>настройка клиентского OpenVPN подключения</h2>
 <h3>на стороне сервера</h3>
+собственно саму настройку OpenVPN сервера оставим за скобками<br>
 запускаем <b>c:\Program Files\OpenVPN\easy-rsa\EasyRSA-Start.bat</b><br>
-генерируем ключ <b>./easyrsa gen-req [имя клиента] nopass</b><br>
-генерируем сертификат ключа <b>./easyrsa sign-req client [имя клиента]</b><br>
+генерируем ключ <b>./easyrsa gen-req [ИмяКлиента] nopass</b><br>
+генерируем сертификат ключа <b>./easyrsa sign-req client [ИмяКлиента]</b><br>
 формируем файл настроек для клиента <b>rpi2.ovpn</b><br>
 формируем набор файлов для клиента <b>rpi2.ovpn</b>, <b>rpi2.key</b>, <b>rpi2.crt</b>, <b>ca.crt</b>, <b>ta.key</b>, <b>dh.pem</b> и передаем его безопасным способом.
 <h3>на стороне клиента</h3>
@@ -154,22 +159,31 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 устанавливаем службу OpenVPN <b>sudo apt-get install openvpn</b><br>
 проверяем правильность хода RTC <b>date</b><br>
 настраиваем часовой пояс если нужно <b>sudo dpkg-reconfigure tzdata</b><br>
-переносим файлы настроек в каталог <b>/etc/openvpn/client</b><br>
-запускаем в ручном режиме и смотрим нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn</b><br>
+меняем текущий каталог <b>cd /etc/openvpn</b><br>
+переносим файлы настроек в каталог <b>/etc/openvpn</b><br>
+запускаем в ручном режиме и смотрим, нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn</b><br>
 запускаем через системный демон <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn --daemon</b><br>
 перезапускаем службу <b>sudo service openvpn restart</b><br>
 смотрим запустилась служба или нет <b>service --status-all</b><br>
-проверяем состояние тунеля и его IP <b>ip a</b><br>
+проверяем состояние туннеля и его IP <b>ip a</b><br>
 <br>
 ссылки по настройке сервера:<br>
+<a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/vdoc_pub_openvpn_building_and_integrating_virtual_private_networks.pdf">книга по OpenVPN</a><br>
 <a href="https://winitpro.ru/index.php/2021/12/28/ustanovka-openvpn-servera-windows/">Установка и настройка OpenVPN сервера под Windows</a><br>
 <a href="https://internet-lab.ru/windows_openvpn_2_5_1">OpenVPN 2.5.1 сервер на Windows</a><br>
 <a href="https://habr.com/ru/post/273371/">Подробная инструкция по OpenVPN v2.3.8 на Windows server 2008R2</a><br>
 <a href="https://www.linux.org.ru/forum/admin/11912037">настроить маршрутизацию для openvp</a><br>
 ссылки по настройке клиента:<br>
 <a href="https://openvpn.net/community-downloads/">загрузка клиент/серверных программ</a><br>
-<a href="https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-linux/">Connecting to Access Server with Linux</a><br>
 <a href="https://www.ovpn.com/en/guides/raspberry-pi-raspbian">Install OpenVPN for Raspbian</a><br>
+<a href="https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-linux/">Connecting to Access Server with Linux</a><br>
+
+<h2>настройка клиентского L2TP подключения VPN ЕЩЕ НЕ ЗАПУСКАЛ</h2>
+регистрируем бесплатный аккаунт <a href="http://lan2lan.ru">lan2lan.ru</a>, создаем пару пользователей<br>
+<br>
+ссылки:<br>
+<a href="https://www.umgum.com/debian-linux-l2tp-ipsec">Linux Debian + L2TP + IPsec</a><br>
+<a href="https://adminvps.ru/blog/ustanovka-i-nastrojka-l2tp-ipsec-na-debian-ubuntu-iphone-mac-dlya-vpn/">Установка и настройка l2tp + ipsec на Debian</a><br>
 
 <h2>глянуть по свободе есть ли в этом смысл</h2>
 <br>
@@ -203,7 +217,7 @@ python3 /home/pi/stats.py &
 <h2>RTC на DS3231</h2>
 проверка текущего времени: <b>timedatectl</b><br>
 установка часового пояса: <b>sudo timedatectl set-timezone Europe/Kiev</b><br>
-все доступные часовые пояса в системе можно подсмотреть в дирректории: <b>/usr/share/zoneinfo</b><br>
+все доступные часовые пояса в системе можно подсмотреть в директории: <b>/usr/share/zoneinfo</b><br>
 <img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231toRPI.webp" alt="подключение часов к RPi">
 проверка правильности подключения часов. адрес 0x68: <b>i2cdetect -y 1</b><br>
 сейчас можно вычитать всю память микросхемы: <b>i2cdump -y 1 0x68</b><br>
