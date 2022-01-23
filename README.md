@@ -124,6 +124,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 <a href="https://github.com/qchats/ser2net/blob/master/ser2net.conf">исходники ser2net</a><br>
 
 <h2>сеть LAN</h2>
+задаем доменное имя <b>sudo raspi-config -> System Options -> Hostname -> [Entertop] -> RPi2 -> [Entertop] -> Finish -> [Entertop]</b><br>
 посмотреть настройки всех сетевых интерфейсов <b>ip a</b> или только LAN <b>ip addr show eth0</b><br> 
 посмотреть открытые порты <b>sudo netstat -tulpn</b><br>
 
@@ -132,6 +133,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 проверяем наличие Wi-Fi адаптера в списке USB устройств <b>lsusb</b> должны увидеть что-то типа Ralink Technology, Corp. MT7601U Wireless Adapter<br>
 смотрим настройки всех сетевых интерфейсов <b>ip a</b> или только WLAN <b>ip addr show wlan0</b><br> 
 смотрим на список доступных AP <b>sudo iwlist wlan0 scan | grep ESSID</b><br> 
+задаем региональные настройки Wi-Fi <b>sudo raspi-config -> Localisation Options -> WLAN Country -> UA Ukraine -> [Entertop] -> [Entertop] -> Finish -> [Entertop]</b><br>
 задаем SSID и пароль для подключения к AP <b>sudo raspi-config -> System Options -> Wireless LAN -> [ВводимSSID] -> [Entertop] -> [ВводимПароль] -> [Entertop] -> Finish</b><br>
 если все же захотелось настроить все ручками, то лазить в <b>/etc/network/interfaces</b> не стоит. на RPi это чревато отвалом всей сети. лучше поправить <b>/etc/wpa_supplicant/wpa_supplicant.conf</b><br> 
 <br>
@@ -161,8 +163,9 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 настраиваем часовой пояс если нужно <b>sudo dpkg-reconfigure tzdata</b><br>
 меняем текущий каталог <b>cd /etc/openvpn</b><br>
 переносим файлы настроек в каталог <b>/etc/openvpn</b><br>
-запускаем в ручном режиме и смотрим, нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn</b><br>
-запускаем через системный демон <b>sudo openvpn --config /etc/openvpn/rpi2.ovpn --daemon</b><br>
+обязательно переименовуем файл конфига <b>sudo mv rpi2.ovpn rpi2.conf</b><br>
+запускаем в ручном режиме и смотрим, нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.conf</b><br>
+запускаем через системный демон <b>sudo openvpn --config /etc/openvpn/rpi2.conf --daemon</b><br>
 перезапускаем службу <b>sudo service openvpn restart</b><br>
 смотрим запустилась служба или нет <b>service --status-all</b><br>
 проверяем состояние туннеля и его IP <b>ip a</b><br>
