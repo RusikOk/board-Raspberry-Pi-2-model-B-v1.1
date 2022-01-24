@@ -69,6 +69,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <a href="https://russianblogs.com/article/7328815997/">Лучший способ закачивать и скачивать файлы Linux под Windows</a><br>
 
 <h2>запуск J-Link Server</h2>
+<b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
 качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_arm.tgz">J-Link utilities</a> <br>
 роспаковуем в каталог пользователя /home/pi/JLink_Linux_V696_arm <br>
 на всякий случай читаем	README.txt <br>
@@ -127,6 +128,10 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 задаем доменное имя <b>sudo raspi-config -> System Options -> Hostname -> [Entertop] -> RPi2 -> [Entertop] -> Finish -> [Entertop]</b><br>
 посмотреть настройки всех сетевых интерфейсов <b>ip a</b> или только LAN <b>ip addr show eth0</b><br> 
 посмотреть открытые порты <b>sudo netstat -tulpn</b><br>
+смотреть открытые порты в реальном времени <b>sudo watch netstat -tulpn</b><br>
+<br>
+ссылки:<br>
+<a href="https://wiki.merionet.ru/servernye-resheniya/32/smotrim-otkrytye-porty-linux/">Смотрим открытые порты Linux</a><br>
 
 <h2>сеть WLAN</h2>
 подключаем USB Wi-Fi сетевой интерфейс <br>
@@ -139,13 +144,38 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 <br>
 ссылки:<br>
 <a href="https://vpautinu.com/wifi/raspberry-pi">Подключение и настройка интернета Wi-Fi на Raspberry Pi</a><br>
+<a href="https://www.raspberrypi.com/documentation/computers/configuration.html#adding-the-network-details-to-your-raspberry-pi">Adding the Network Details to your Raspberry Pi</a><br>
 
-<h2>настройка мобильного интернета 3G ЕЩЕ НЕ ЗАПУСКАЛ</h2>
+<h2>настройка мобильного интернета 3G</h2>
+как всегда сначала <b>sudo apt-get update</b><br>
+потом <b>sudo apt-get upgrade</b><br>
+устанавливаем службу ppp <b>sudo apt-get install ppp</b><br>
+cкачиваем утилиту sakis3g для быстрой настройки PPP соединения: <b>wget https://netix.dl.sourceforge.net/project/vim-n4n0/sakis3g.tar.gz && tar -xzvf sakis3g.tar.gz && rm sakis3g.tar.gz</b><br>
+устанавливаем права на запуск бинарника <b>sudo chmod +x sakis3g</b><br>
+перемещаем в рабочий каталог <b>sudo mv sakis3g /usr/bin/sakis3g</b><br>
+
+пробуем настроить получение 3G интернета <b>sudo sakis3g --console --interactive</b><br>
+подключаемся <b>Connect with 3G -> Ace&Base (www.ab.kyivstar.net) -> [Entertop] -> Cancel</b><br>
+<b>Примечание !</b>После установки 3G PPP соединения в системе сменится default route и весь трафик по умолчанию будет идти через мобильное 3G/GPRS соединение.<br>
+смотрим какой  СЕРЫЙ IP мы получили от провайдера <b>ip a</b><br> 
+пингонем что нибудь <b>ping google.com</b><br>
+опять запускаем сакис <b>sudo sakis3g --console --interactive</b><br>
+получаем строку подключения и отключаемся <b>More options... -> Generate success report -> [КопируемСтрокуПослеСловаVariables:] -> [Entertop] -> Disconnect</b><br>
+у меня строка инициализации соединения получилась такой <b>--console --interactive APN="www.ab.kyivstar.net" USBDRIVER="option" MODEM="12d1:1001"</b><br>
+проверяем, чтобы содинение ppp упало <b>ip a</b><br> 
+устанавливаем соединение из консоли <b>sudo sakis3g connect APN="www.ab.kyivstar.net" USBDRIVER="option" MODEM="12d1:1001"</b> и ждем заветную строчку Connected.<br>
+проверяем состояние подключения средствами сакиса <b>sakis3g --console status</b><br> 
+посмотрим Connection Information <b>sudo sakis3g --console info</b><br> 
+проверяем, чтобы содинение ppp поднялось <b>ip a</b><br> 
+пингонем что нибудь <b>ping google.com</b><br>
+отключаемся <b>sudo sakis3g disconnect</b><br>
+<b>Примечание !</b>После дисконнекта 3G, OpenVPN туннель тоже падает и не подымается даже если в локалке есть инет.<br>
 <br>
 ссылки:<br>
 <a href="https://kotvaska.medium.com/internet-for-raspbery-pi-abcc46ff24f1">Internet for Raspberry Pi</a><br>
 <a href="https://robocraft.ru/blog/electronics/3131.html">Raspberry Pi. Установка и настройка комплекта MTC Коннект 4 (модем Huawei E171) на Raspbian</a><br>
 <a href="https://onedev.net/post/904">Настройка 3G/GPRS интернета утилитой Sakis3g на GSM модеме Huawei E1550</a><br>
+<a href="https://onedev.net/post/916">Переключение режима USB модема из Mаss Storage в GSM modem в Linux</a><br>
 
 <h2>настройка клиентского OpenVPN подключения</h2>
 <h3>на стороне сервера</h3>
@@ -154,7 +184,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 генерируем ключ <b>./easyrsa gen-req [ИмяКлиента] nopass</b><br>
 генерируем сертификат ключа <b>./easyrsa sign-req client [ИмяКлиента]</b><br>
 формируем файл настроек для клиента <b>rpi2.ovpn</b><br>
-формируем набор файлов для клиента <b>rpi2.ovpn</b>, <b>rpi2.key</b>, <b>rpi2.crt</b>, <b>ca.crt</b>, <b>ta.key</b>, <b>dh.pem</b> и передаем его безопасным способом.
+формируем набор файлов для клиента <b>rpi2.ovpn</b>, <b>rpi2.key</b>, <b>rpi2.crt</b>, <b>ca.crt</b>, <b>ta.key</b>, <b>dh.pem</b> и передаем безопасным способом.
 <h3>на стороне клиента</h3>
 как всегда сначала <b>sudo apt-get update</b><br>
 потом <b>sudo apt-get upgrade</b><br>
