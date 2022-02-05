@@ -32,13 +32,38 @@ sudo raspi-config -> Interfacing Options -> SSH -> Yes -> [Entertop] -> Finish
 <br>
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
-<h2>установка стандартного для меня софта</h2>
+<h2>установка стандартного для меня софта и настроек</h2>
+в самом конце файла <b>/etc/fstab</b> дописываем строки:<br>
+
+```ini
+# rusikok пишем логи в оперативку, туда же переносим временные файлы
+tmpfs           /tmp                tmpfs   defaults,noatime,nosuid,size=100m                   0   0
+tmpfs           /var/tmp            tmpfs   defaults,noatime,nosuid,size=30m                    0   0
+tmpfs           /var/log            tmpfs   defaults,noatime,nosuid,mode=0755,size=100m         0   0
+tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gid=12,size=10m   0   0
+```
+
+выключаем использование swap-памяти сейчас <b>sudo dphys-swapfile swapoff</b><br>
+выключаем сервис использования swap-памяти <b>sudo systemctl disable dphys-swapfile</b><br>
+перезагружаемся <b>sudo reboot</b><br>
 синхронизации файлов описаний пакетов с репозитарием: <b>sudo apt-get update</b><br>
 установка новейших версий всех установленных пакетов системы: <b>sudo apt-get upgrade</b><br>
 проверить установлен пакет или нет можно командой: <b>apt-cache policy [ИмяПакета]</b><br>
 Midnight Commander: <b>sudo apt-get install mc</b><br>
 диспетчер задач: <b>sudo apt-get install htop</b><br>
 ZMODEM: <b>sudo apt-get install lrzsz</b><br>
+на последок удаляем старые кеши:
+
+```ini
+sudo rm -rf /var/cache/fontconfig/
+sudo rm -rf /var/cache/apt/
+sudo rm -rf /var/cache/pacman/
+sudo rm -rf /var/cache/man/
+```
+<br>
+ссылки:<br>
+<a href="https://romantelychko.com/blog/1611/">Установка и оптимизация Raspbian на Raspberry Pi</a><br>
+<a href="https://zalinux.ru/?p=3047">Какие файлы можно удалить при нехватке места на диске Linux</a><br>
 
 <h2>мониторинг параметров HW системы</h2>
 команда <b>dmesg</b> покажет сообщения ядра<br>
@@ -68,7 +93,7 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 ссылки:<br>
 <a href="https://russianblogs.com/article/7328815997/">Лучший способ закачивать и скачивать файлы Linux под Windows</a><br>
 
-<h2>запуск J-Link Server</h2>
+<h2>запуск J-Link Remote Server УСТАРЕЛО !!!</h2>
 <b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
 качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_arm.tgz">J-Link utilities</a> <br>
 роспаковуем в каталог пользователя /home/pi/JLink_Linux_V696_arm <br>
@@ -84,9 +109,8 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 
 ```ini
 # rusikok jLink remote server start
-/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/rusikok/jLinkRS/%Y-%m-%d_%H-%M.log") &
+/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/jLinkRS/%Y-%m-%d_%H-%M.log") &
 ```
-
 ссылки:<br>
 <a href="https://blog.feabhas.com/2019/07/using-a-raspberry-pi-as-a-remote-headless-j-link-server/">Using a Raspberry Pi as a remote headless J-Link Server</a>
 <br>
@@ -94,17 +118,60 @@ ZMODEM: <b>sudo apt-get install lrzsz</b><br>
 <br>
 <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/jLink%20manual%20UM08001.pdf">J-Link User Manual</a>
 
+<h2>установка J-Link Remote Server</h2>
+<b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
+качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_V760g_arm.deb">32-bit Linux ARM DEB Installer</a> <br>
+копируем в каталог /home/pi/ скачанный дистрибутив<br>
+синхронизация: <b>sudo apt-get update</b><br>
+обновление пакетов системы: <b>sudo apt-get upgrade</b><br>
+устанавливаем <b>sudo apt-get install /home/pi/JLink_Linux_V760g_arm.deb</b> -> y -> I <br>
+удаляем пакет <b>rm /home/pi/JLink_Linux_V760g_arm.deb</b> <br>
+подключаем J-Link <br>
+проверяем J-Link в списке USB устройств <b>lsusb</b> должны увидеть что-то типа SEGGER J-Link PLUS<br>
+проверяем подключение <b>JLinkExe</b> -> q <br>
+запускаем jLink Remote Server <b>JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
+
+<h2>systemd автозапуск J-Link Remote Server</h2>
+создаем файл <b>/etc/systemd/system/jlink.service</b> <br>
+
+```service
+
+```
+
+перезагрузка <b>sudo systemctl daemon-reload</b> <br>
+инсталяция сервиса <b>sudo systemctl restart jlink.service</b> <br>
+автозагрузка и запуск <b>sudo systemctl enable --now jlink</b> <br>
+проверка статуса службы <b>systemctl status jlink</b> <br>
+
+
+
+
+sudo chmod +x /etc/systemd/system/jwdt.sh
+<br>
+/bin/systemctl status --no-pager jlink | /bin/grep Rejected<br>
+journalctl -u jlink<br>
+systemctl list-dependencies jlink - отображение зависимостей
+systemctl show jlink - Проверка свойств юнита
+systemd-analyze - Выводит хронометраж процесса загрузки юнитов - сервисов, точек монтирования, устройств и сокетов<br>
+systemd-analyze blame - Вывести время, которое потребовалось для загрузки каждого из юнитов<br>
+systemd-analyze critical-chain - Вывести цепочку юнитов с наибольшим временем загрузки<br>
+
+ссылки:<br>
+<a href=""></a><br>
+<a href=""></a><br>
+<a href=""></a><br>
+<a href=""></a><br>
+
 <h2>работа с последовательными портами</h2>
 посмотреть текущие настройки порта <b>stty -F /dev/ttyUSB0 -a</b><br>
 устанавливаем настройки порта <b>stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb</b> (настройку нужно производить после открытия)<br>
-создаем пару каталогов для лог файлов <b>sudo mkdir /var/log/rusikok /var/log/rusikok/tty</b><br>
 перенаправляем вывод порта в файл <b>cat /dev/ttyUSB0 > "$(date +"/home/pi/ttyUSB0_%Y-%m-%d_%H-%M.log")" &</b><br>
 в самом конце файла <b>/etc/rc.local</b> добавляем логирование в автозагрузку:<br>
 
 ```ini
 # rusikok start logging serial port data
-cat /dev/ttyUSB0 > $(date +"/var/log/rusikok/tty/ttyUSB0_%Y-%m-%d_%H-%M.log") &
-stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
+cat /dev/ttyUSB0 > $(date +"/home/pi/ttyUSB0_%Y-%m-%d_%H-%M.log") &
+stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 ```
 
 ссылки:<br>
@@ -114,7 +181,6 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
 <h2>проброс последовательных портов через сеть</h2>
 установка сервиса <b>sudo apt-get install ser2net</b><br>
 правим конфиг <b>/etc/ser2net.conf</b> <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/ser2net.conf">сам конфиг</a> <br>
-создаем пару каталогов для лог файлов <b>sudo mkdir /var/log/rusikok /var/log/rusikok/ser2net</b><br>
 перезагружаем службу <b>sudo service ser2net start</b><br>
 подключаемся через telnet на 2000 порт с другой win машины и смотрим на вывод <b>telnet 192.168.0.7 2000</b><br>
 <br>
@@ -156,7 +222,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 
 пробуем настроить получение 3G интернета <b>sudo sakis3g --console --interactive</b><br>
 подключаемся <b>Connect with 3G -> Ace&Base (www.ab.kyivstar.net) -> [Entertop] -> Cancel</b><br>
-<b>Примечание !</b>После установки 3G PPP соединения в системе сменится default route и весь трафик по умолчанию будет идти через мобильное 3G/GPRS соединение.<br>
+<b>Примечание ! </b>После установки 3G PPP соединения в системе сменится default route и весь трафик по умолчанию будет идти через мобильное 3G/GPRS соединение.<br>
 смотрим какой  СЕРЫЙ IP мы получили от провайдера <b>ip a</b><br> 
 пингонем что нибудь <b>ping google.com</b><br>
 опять запускаем сакис <b>sudo sakis3g --console --interactive</b><br>
@@ -169,7 +235,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 проверяем, чтобы содинение ppp поднялось <b>ip a</b><br> 
 пингонем что нибудь <b>ping google.com</b><br>
 отключаемся <b>sudo sakis3g disconnect</b><br>
-<b>Примечание !</b>После дисконнекта 3G, OpenVPN туннель тоже падает и не подымается даже если в локалке есть инет.<br>
+<b>Примечание ! </b>После дисконнекта 3G, OpenVPN туннель тоже падает и не подымается даже если в локалке есть инет.<br>
 <br>
 ссылки:<br>
 <a href="https://kotvaska.medium.com/internet-for-raspbery-pi-abcc46ff24f1">Internet for Raspberry Pi</a><br>
@@ -210,6 +276,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 <a href="https://openvpn.net/community-downloads/">загрузка клиент/серверных программ</a><br>
 <a href="https://www.ovpn.com/en/guides/raspberry-pi-raspbian">Install OpenVPN for Raspbian</a><br>
 <a href="https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-linux/">Connecting to Access Server with Linux</a><br>
+<a href="https://bozza.ru/art-160.html">Команды OpenVPN</a><br>
 
 <h2>настройка клиентского L2TP подключения VPN ЕЩЕ НЕ ЗАПУСКАЛ</h2>
 регистрируем бесплатный аккаунт <a href="http://lan2lan.ru">lan2lan.ru</a>, создаем пару пользователей<br>

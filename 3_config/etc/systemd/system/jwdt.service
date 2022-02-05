@@ -1,0 +1,14 @@
+# This service unit is for testing timer units
+# By David Both
+# Licensed under GPL V2
+
+[Unit]
+Description=Logs system statistics to the systemd journal
+Wants=jwdt.timer
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl status jlink | /bin/grep Rejected
+
+[Install]
+WantedBy=multi-user.target
