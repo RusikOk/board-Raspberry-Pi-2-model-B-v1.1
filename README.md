@@ -126,7 +126,7 @@ sudo rm -rf /var/cache/man/
 обновление пакетов системы: <b>sudo apt-get upgrade</b><br>
 устанавливаем <b>sudo apt-get install /home/pi/JLink_Linux_V760g_arm.deb</b> -> y -> I <br>
 удаляем пакет <b>rm /home/pi/JLink_Linux_V760g_arm.deb</b> <br>
-подключаем J-Link <br>
+подключаем J-Link по USB <br>
 проверяем J-Link в списке USB устройств <b>lsusb</b> должны увидеть что-то типа SEGGER J-Link PLUS<br>
 проверяем подключение <b>JLinkExe</b> -> q <br>
 запускаем jLink Remote Server <b>JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
@@ -140,14 +140,18 @@ sudo rm -rf /var/cache/man/
 
 перезагрузка <b>sudo systemctl daemon-reload</b> <br>
 инсталяция сервиса <b>sudo systemctl restart jlink.service</b> <br>
-автозагрузка и запуск <b>sudo systemctl enable --now jlink</b> <br>
+автозагрузка <b>sudo systemctl enable --now jlink</b> <br>
+запуск <b>sudo systemctl start jlink</b> <br>
 проверка статуса службы <b>systemctl status jlink</b> <br>
+ребут <b>sudo reboot</b> <br>
+проверка статуса службы <b>systemctl status jlink</b> и видим, <b>ЧТО НИХРЕНА НЕ ЗАПУСТИЛОСЬ</b> <br>
+перемещаем символическую ссылку /etc/systemd/system/multiuser.target.wants/jlink.service в каталог /etc/systemd/system/multi-user.target.wants/ <br>
+ребут <b>sudo reboot</b> <br>
+проверка статуса службы <b>systemctl status jlink</b> теперь все ОК<br>
 
-
-
+проверка статуса службы в реальном времени <b>journalctl -S today -f -u jlink.service</b> теперь все ОК<br>
 
 sudo chmod +x /etc/systemd/system/jwdt.sh
-<br>
 /bin/systemctl status --no-pager jlink | /bin/grep Rejected<br>
 journalctl -u jlink<br>
 systemctl list-dependencies jlink - отображение зависимостей
@@ -157,10 +161,11 @@ systemd-analyze blame - Вывести время, которое потребо
 systemd-analyze critical-chain - Вывести цепочку юнитов с наибольшим временем загрузки<br>
 
 ссылки:<br>
+<a href="https://habr.com/ru/company/southbridge/blog/255845/">Systemd за пять минут</a><br>
 <a href=""></a><br>
-<a href=""></a><br>
-<a href=""></a><br>
-<a href=""></a><br>
+<a href="https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/#systemd">Run a Program On Your Raspberry Pi At Startup</a><br>
+<a href="https://habr.com/ru/company/ruvds/blog/512868/">Использование таймеров systemd вместо заданий cron</a><br>
+<a href="http://vladimir-stupin.blogspot.com/2013/02/systemd-2-service.html">systemd. Часть 2. service-файлы</a><br>
 
 <h2>работа с последовательными портами</h2>
 посмотреть текущие настройки порта <b>stty -F /dev/ttyUSB0 -a</b><br>
