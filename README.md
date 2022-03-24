@@ -212,10 +212,14 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 задаем региональные настройки Wi-Fi <b>sudo raspi-config -> Localisation Options -> WLAN Country -> UA Ukraine -> [Entertop] -> [Entertop] -> Finish -> [Entertop]</b><br>
 задаем SSID и пароль для подключения к AP <b>sudo raspi-config -> System Options -> Wireless LAN -> [ВводимSSID] -> [Entertop] -> [ВводимПароль] -> [Entertop] -> Finish</b><br>
 если все же захотелось настроить все ручками, то лазить в <b>/etc/network/interfaces</b> не стоит. на RPi это чревато отвалом всей сети. лучше поправить <b>/etc/wpa_supplicant/wpa_supplicant.conf</b><br> 
+посмотреть параметры Wi-Fi подключения <b>iwconfig</b><br>
+увеличим мощность передатчика до 30dBm. в файле /etc/wpa_supplicant/wpa_supplicant.conf меняем 3ю строчку на<b>country=BZ</b><br>
 <br>
 ссылки:<br>
 <a href="https://vpautinu.com/wifi/raspberry-pi">Подключение и настройка интернета Wi-Fi на Raspberry Pi</a><br>
 <a href="https://www.raspberrypi.com/documentation/computers/configuration.html#adding-the-network-details-to-your-raspberry-pi">Adding the Network Details to your Raspberry Pi</a><br>
+<a href="https://hackware.ru/?p=4125">Как увеличить мощность (TX Power) Wi-Fi</a><br>
+<a href="https://zalinux.ru/?p=411">Переход с устаревшей команды iwconfig (wireless_tools) на iw</a><br>
 
 <h2>настройка мобильного интернета 3G</h2>
 как всегда сначала <b>sudo apt-get update</b><br>
