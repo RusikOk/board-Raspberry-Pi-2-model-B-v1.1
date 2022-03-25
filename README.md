@@ -130,6 +130,7 @@ sudo rm -rf /var/cache/man/
 проверяем J-Link в списке USB устройств <b>lsusb</b> должны увидеть что-то типа SEGGER J-Link PLUS<br>
 проверяем подключение <b>JLinkExe</b> -> q <br>
 запускаем jLink Remote Server <b>JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
+запускаем jLink RTT Logger <b>JLinkRTTLoggerExe -IP 127.0.0.1 -device STM32F103CB -if SWD -speed 1000 -rttchannel 0 $(date +"/home/pi/RTT-%Y-%m-%d-%H-%M.log")</b> -> q <br>
 
 <h2>systemd автозапуск J-Link Remote Server</h2>
 создаем файл <b>/etc/systemd/system/jlink.service</b> <br>
@@ -161,6 +162,9 @@ systemd-analyze blame - Вывести время, которое потребо
 systemd-analyze critical-chain - Вывести цепочку юнитов с наибольшим временем загрузки<br>
 
 ссылки:<br>
+<a href="https://habr.com/ru/post/535872/">Почему хабражители предпочитают велосипеды, вместо готовых решений? Или о systemd, part 0</a><br>
+<a href="https://habr.com/ru/post/535930/">Systemd для продолжающих. Part 1 — Запуск юнитов по временным событиям</a><br>
+<a href="https://habr.com/ru/post/536040/">Systemd для продолжающих. Part 2 — Триггеры на различные события</a><br>
 <a href="https://habr.com/ru/company/southbridge/blog/255845/">Systemd за пять минут</a><br>
 <a href=""></a><br>
 <a href="https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/#systemd">Run a Program On Your Raspberry Pi At Startup</a><br>
