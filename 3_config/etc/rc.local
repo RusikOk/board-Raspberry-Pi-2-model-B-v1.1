@@ -17,15 +17,14 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-# rusikok start OLED menu
-python3 /home/pi/stats.py &
+# rusikok start logging serial port data
+cat /dev/ttyUSB0 > $(date +"/home/pi/ttyUSB0-%Y-%m-%d-%H-%M.log") &
+stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 
 # rusikok jLink remote server start
-#/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/rusikok/jLinkRS/%Y-%m-%d_%H-%M.log") &
-service jlink start
+#/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/jLinkRS-%Y-%m-%d-%H-%M.log") &
 
-# rusikok start logging serial port data
-cat /dev/ttyUSB0 > $(date +"/var/log/rusikok/tty/ttyUSB0_%Y-%m-%d_%H-%M.log") &
-stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb &
+# rusikok start OLED menu
+python3 /usr/local/bin/rusikok_oled_menu.py &
 
 exit 0

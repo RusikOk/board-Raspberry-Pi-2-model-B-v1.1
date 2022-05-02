@@ -131,6 +131,7 @@ sudo rm -rf /var/cache/man/
 проверяем подключение <b>JLinkExe</b> -> q <br>
 запускаем jLink Remote Server <b>JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
 запускаем jLink RTT Logger <b>JLinkRTTLoggerExe -IP 127.0.0.1 -device STM32F103CB -if SWD -speed 1000 -rttchannel 0 $(date +"/home/pi/RTT-%Y-%m-%d-%H-%M.log")</b> -> q <br>
+просмотр лога RTT в реальном времени <b>log.sh RTT</b> -> ctr + c <br>
 
 <h2>systemd автозапуск J-Link Remote Server</h2>
 создаем файл <b>/etc/systemd/system/jlink.service</b> <br>
@@ -166,7 +167,7 @@ systemd-analyze critical-chain - Вывести цепочку юнитов с �
 <a href="https://habr.com/ru/post/535930/">Systemd для продолжающих. Part 1 — Запуск юнитов по временным событиям</a><br>
 <a href="https://habr.com/ru/post/536040/">Systemd для продолжающих. Part 2 — Триггеры на различные события</a><br>
 <a href="https://habr.com/ru/company/southbridge/blog/255845/">Systemd за пять минут</a><br>
-<a href=""></a><br>
+<a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/systemd%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%202017.pdf">systemd для администраторов</a><br>
 <a href="https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/#systemd">Run a Program On Your Raspberry Pi At Startup</a><br>
 <a href="https://habr.com/ru/company/ruvds/blog/512868/">Использование таймеров systemd вместо заданий cron</a><br>
 <a href="http://vladimir-stupin.blogspot.com/2013/02/systemd-2-service.html">systemd. Часть 2. service-файлы</a><br>
@@ -217,7 +218,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 задаем SSID и пароль для подключения к AP <b>sudo raspi-config -> System Options -> Wireless LAN -> [ВводимSSID] -> [Entertop] -> [ВводимПароль] -> [Entertop] -> Finish</b><br>
 если все же захотелось настроить все ручками, то лазить в <b>/etc/network/interfaces</b> не стоит. на RPi это чревато отвалом всей сети. лучше поправить <b>/etc/wpa_supplicant/wpa_supplicant.conf</b><br> 
 посмотреть параметры Wi-Fi подключения <b>iwconfig</b><br>
-увеличим мощность передатчика до 30dBm. в файле /etc/wpa_supplicant/wpa_supplicant.conf меняем 3ю строчку на<b>country=BZ</b><br>
+увеличим мощность передатчика до 30dBm. в файле <b>/etc/wpa_supplicant/wpa_supplicant.conf</b> меняем 3ю строчку на <b>country=BZ</b><br>
 <br>
 ссылки:<br>
 <a href="https://vpautinu.com/wifi/raspberry-pi">Подключение и настройка интернета Wi-Fi на Raspberry Pi</a><br>
@@ -273,6 +274,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 меняем текущий каталог <b>cd /etc/openvpn</b><br>
 переносим файлы настроек в каталог <b>/etc/openvpn</b><br>
 обязательно переименовуем файл конфига <b>sudo mv rpi2.ovpn rpi2.conf</b><br>
+сменим текущий каталог <b>cd /etc/openvpn</b><br>
 запускаем в ручном режиме и смотрим, нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.conf</b><br>
 запускаем через системный демон <b>sudo openvpn --config /etc/openvpn/rpi2.conf --daemon</b><br>
 перезапускаем службу <b>sudo service openvpn restart</b><br>
@@ -311,12 +313,12 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 <a href="https://pinout.xyz/#">отличная шпора по пинам</a><br>
 
 <h2>OLED на контроллере SSD1306</h2>
-запуск скрипта вручную: <b>python3 stats.py</b><br>
+запуск скрипта вручную: <b>python3 rusikok_oled_menu.py</b><br>
 в самом конце файла <b>/etc/rc.local</b> добавляем вызов скрипта в фоновом режиме после загрузки:<br>
 
 ```ini
 # rusikok start OLED menu
-python3 /home/pi/stats.py &
+python3 /usr/local/bin/rusikok_oled_menu.py &
 ```
 
 ссылки:<br>
