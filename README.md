@@ -366,3 +366,14 @@ dtoverlay=i2c-rtc,ds3231
 <a href="https://www.raspberrypi.org/forums/viewtopic.php?p=1138858&sid=78cfd3416e0f02ddfd575a98ea15198d#p1138858">ds3231 clock temperature sensor access</a><br>
 <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231_RU.pdf">DS3231 datasheet на русском</a><br>
 <a href="http://wikihandbk.com/wiki/Raspberry_Pi:%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0/config.txt">Raspberry Pi:Настройка/config.txt</a><br>
+
+<h1>BOX</h1>
+
+<a href="https://eltis.ua/catalog/korpusa-dlya-sistem-embeddeda1ak/it-10-0012225-rmb-korpus-na-din-reyku-raspberry-pi-b-abs-seryy-kh-22-5mm/">неплохой промышленный корпус</a><br>
+
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/box1/506415_1.webp"><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/box1/507079_1.webp"><br>
+
+<a href="https://www.siver.technology/products/raspberry-pi-4-to-din-rail-mount">более универсальный вариант</a><br>
+
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/box2/506415_1.webp"><br>
