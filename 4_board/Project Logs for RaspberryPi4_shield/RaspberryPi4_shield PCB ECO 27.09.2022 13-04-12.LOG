@@ -1,5 +1,0 @@
-Added Component: Designator=XT?(15EDGRC-3.5-02pin)
-Add component. Clean all parameters for all variants
-Added Pin To Net: NetName=+24V Pin=XT?-1
-Added Pin To Net: NetName=GND Pin=XT?-2
-Added Member To Class: ClassName=RaspberryPi4_shield Member=Component XT? DG15EDGK-3.5-02

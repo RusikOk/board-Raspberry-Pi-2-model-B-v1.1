@@ -1,5 +1,0 @@
-Removed Pin From Net: NetName=+24V Pin=XT1-1
-Removed Pin From Net: NetName=GND Pin=XT1-2
-Removed Member From Class: ClassName=Mbus_power_250 opto_v.5 Member=XT1
-Change Net Name : Old Net Name=18V New Net Name=5.1V
-Change Class Name : Old Net Name=Mbus_power_250 opto_v.5 New Net Name=RaspberryPi4_shield
