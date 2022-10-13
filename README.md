@@ -1,7 +1,7 @@
 # board-Raspberry-Pi-2-model-B-v1.1
 полезные штуки в одном месте для удобства работы с малиной
 
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/P11228-202955.jpg"><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/P11228-202955.jpg"><br>
 
 <h1>SOFT</h1>
 
@@ -190,7 +190,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 
 <h2>проброс последовательных портов через сеть</h2>
 установка сервиса <b>sudo apt-get install ser2net</b><br>
-правим конфиг <b>/etc/ser2net.conf</b> <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/ser2net.conf">сам конфиг</a> <br>
+правим конфиг <b>/etc/ser2net.conf</b> <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/5_config/ser2net.conf">сам конфиг</a> <br>
 перезагружаем службу <b>sudo service ser2net start</b><br>
 подключаемся через telnet на 2000 порт с другой win машины и смотрим на вывод <b>telnet 192.168.0.7 2000</b><br>
 <br>
@@ -352,7 +352,7 @@ dtoverlay=i2c-rtc,ds3231
 удаляем пакет фейк часов: <b>sudo apt-get remove fake-hwclock</b><br>
 удаляем сценарий инициализации: <b>sudo update-rc.d -f fake-hwclock remove</b><br>
 отключаем службу фейк часов: <b>sudo systemctl disable fake-hwclock</b><br>
-привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a><br>
+привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/5_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a><br>
 проверить состояние аппаратных часов: <b>sudo hwclock --verbose -r</b><br>
 посмотреть время из RTC: <b>sudo hwclock</b><br>
 обновить системное время данными из RTC: <b>sudo hwclock --hctosys</b><br>
@@ -371,9 +371,9 @@ dtoverlay=i2c-rtc,ds3231
 
 <a href="https://eltis.ua/catalog/korpusa-dlya-sistem-embeddeda1ak/it-10-0012225-rmb-korpus-na-din-reyku-raspberry-pi-b-abs-seryy-kh-22-5mm/">неплохой промышленный корпус</a><br>
 
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/box1/506415_1.webp"><br>
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_фото/box1/507079_1.webp"><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/box1/506415_1.webp"><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/box1/507079_1.webp"><br>
 
 <a href="https://www.siver.technology/products/raspberry-pi-4-to-din-rail-mount">более универсальный вариант</a><br>
 
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/7_%D1%84%D0%BE%D1%82%D0%BE/box2/%D0%9A%D1%80%D0%B5%D0%BF%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20Raspberry%20PI%204%20%D0%BD%D0%B0%20DIN%20%D1%80%D0%B5%D0%B9%D0%BA%D1%83.100.png"><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/box2/%D0%9A%D1%80%D0%B5%D0%BF%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20Raspberry%20PI%204%20%D0%BD%D0%B0%20DIN%20%D1%80%D0%B5%D0%B9%D0%BA%D1%83.100.png"><br>
