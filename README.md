@@ -300,6 +300,16 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 <a href="https://www.umgum.com/debian-linux-l2tp-ipsec">Linux Debian + L2TP + IPsec</a><br>
 <a href="https://adminvps.ru/blog/ustanovka-i-nastrojka-l2tp-ipsec-na-debian-ubuntu-iphone-mac-dlya-vpn/">Установка и настройка l2tp + ipsec на Debian</a><br>
 
+<h2>FM передатчик</h2>
+подключаем проводок длиной 10см к GPIO 4<br>
+скачиваем <b>wget http://omattos.com/pifm.tar.gz</b><br>
+роспаковуем в каталог <b>/pifm</b><br>
+запускаем трансляцию <b>./pifm sound.wav 103.0 22050 stereo</b><br>
+к слову звук очень противный и не качественный. еще и полоса пропускания очень широкая занимает аж под 2МГц.<br>
+<br>
+ссылки:<br>
+<a href="http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter">Turning the Raspberry Pi Into an FM Transmitter</a><br>
+
 <h2>глянуть по свободе есть ли в этом смысл</h2>
 <br>
 ссылки:<br>
@@ -309,7 +319,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 <h1>HARD</h1>
 
 <h2>pinout</h2>
-<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/1_%D1%81%D1%85%D0%B5%D0%BC%D1%8B/RaspberryPi2_pinout.png"><br>
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/3_schematic/RaspberryPi2_pinout.png"><br>
 <a href="https://pinout.xyz/#">отличная шпора по пинам</a><br>
 
 <h2>OLED на контроллере SSD1306</h2>
