@@ -61,6 +61,7 @@ __Previews/
 
 # rusikok
 *.img
+*.img.gz
 *.crt
 *.pem
 *.key

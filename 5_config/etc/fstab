@@ -4,7 +4,7 @@ PARTUUID=a69ea453-02  /               ext4    defaults,noatime  0       1
 # a swapfile is not a swap partition, no line here
 #   use  dphys-swapfile swap[on|off]  for that
 # rusikok пишем логи в оперативку, туда же переносим временные файлы
-tmpfs           /tmp                tmpfs   defaults,noatime,nosuid,size=100m                   0   0
+tmpfs           /tmp                tmpfs   defaults,noatime,nosuid                             0   0
 tmpfs           /var/tmp            tmpfs   defaults,noatime,nosuid,size=30m                    0   0
 tmpfs           /var/log            tmpfs   defaults,noatime,nosuid,mode=0755,size=100m         0   0
 tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gid=12,size=10m   0   0

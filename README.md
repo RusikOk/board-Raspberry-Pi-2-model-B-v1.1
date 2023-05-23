@@ -1,6 +1,7 @@
 # board-Raspberry-Pi-2-model-B-v1.1
 полезные штуки в одном месте для удобства работы с малиной
 
+<img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/P30417-003840.jpg"><br>
 <img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/P11228-202955.jpg"><br>
 
 <h1>SOFT</h1>
@@ -32,34 +33,46 @@ sudo raspi-config -> Interfacing Options -> SSH -> Yes -> [Entertop] -> Finish
 <br>
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
-<h2>установка стандартного для меня софта и настроек</h2>
-в самом конце файла <b>/etc/fstab</b> дописываем строки:<br>
+разрабы в очередной раз решили подмешать говна и заставляют теперь создавать собственную пару пользователь/пароль. если у вас нет монитора то нужно создать файлик <b>userconf.txt</b> в корне загрузочного раздела и вписать туда логин и зашифрованный пароль через двоеточие <b>pi:encrypted- password</b>
+для получения зашифрованного пароля через другую расбери введите команду: <b>echo 'mypassword' | openssl passwd -6 -stdin</b>
+<br>
+ссылки:<br>
+<a href="https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/">An update to Raspberry Pi OS Bullseye</a><br>
 
-```ini
-# rusikok пишем логи в оперативку, туда же переносим временные файлы
-tmpfs           /tmp                tmpfs   defaults,noatime,nosuid,size=100m                   0   0
-tmpfs           /var/tmp            tmpfs   defaults,noatime,nosuid,size=30m                    0   0
-tmpfs           /var/log            tmpfs   defaults,noatime,nosuid,mode=0755,size=100m         0   0
-tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gid=12,size=10m   0   0
-```
+<h2>установка стандартного для меня софта и настроек</h2>
 
 выключаем использование swap-памяти сейчас <b>sudo dphys-swapfile swapoff</b><br>
 выключаем сервис использования swap-памяти <b>sudo systemctl disable dphys-swapfile</b><br>
-перезагружаемся <b>sudo reboot</b><br>
+удаляем swap с диска <b>sudo rm /var/swap</b><br>
 синхронизации файлов описаний пакетов с репозитарием: <b>sudo apt-get update</b><br>
 установка новейших версий всех установленных пакетов системы: <b>sudo apt-get upgrade</b><br>
 проверить установлен пакет или нет можно командой: <b>apt-cache policy [ИмяПакета]</b><br>
 Midnight Commander: <b>sudo apt-get install mc</b><br>
 диспетчер задач: <b>sudo apt-get install htop</b><br>
 ZMODEM: <b>sudo apt-get install lrzsz</b><br>
-на последок удаляем старые кеши:
+удаляем старые кеши и логи:
 
 ```ini
 sudo rm -rf /var/cache/fontconfig/
 sudo rm -rf /var/cache/apt/
 sudo rm -rf /var/cache/pacman/
 sudo rm -rf /var/cache/man/
+sudo rm -rf /tmp/*
+sudo rm -rf /var/log/*
 ```
+
+в самом конце файла <b>/etc/fstab</b> дописываем строки:<br>
+
+```ini
+# rusikok пишем логи в оперативку, туда же переносим временные файлы
+tmpfs           /tmp                tmpfs   defaults,noatime,nosuid                             0   0
+tmpfs           /var/tmp            tmpfs   defaults,noatime,nosuid,size=30m                    0   0
+tmpfs           /var/log            tmpfs   defaults,noatime,nosuid,mode=0755,size=100m         0   0
+tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gid=12,size=10m   0   0
+```
+
+перезагружаемся <b>sudo reboot</b><br>
+по желанию редактируем приветствие консоли <b>/etc/motd</b><br>
 <br>
 ссылки:<br>
 <a href="https://romantelychko.com/blog/1611/">Установка и оптимизация Raspbian на Raspberry Pi</a><br>
@@ -121,7 +134,7 @@ sudo rm -rf /var/cache/man/
 <h2>установка J-Link Remote Server</h2>
 <b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
 качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_V760g_arm.deb">32-bit Linux ARM DEB Installer</a> <br>
-копируем в каталог /home/pi/ скачанный дистрибутив<br>
+копируем в каталог <b>/home/pi/</b> скачанный дистрибутив<br>
 синхронизация: <b>sudo apt-get update</b><br>
 обновление пакетов системы: <b>sudo apt-get upgrade</b><br>
 устанавливаем <b>sudo apt-get install /home/pi/JLink_Linux_V760g_arm.deb</b> -> y -> I <br>
@@ -310,11 +323,24 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 ссылки:<br>
 <a href="http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter">Turning the Raspberry Pi Into an FM Transmitter</a><br>
 
-<h2>глянуть по свободе есть ли в этом смысл</h2>
+<h2>DNS сервер Pi-hole</h2>
+не особо полезная штука. ФЛЕШКА СДОХЛА ЧЕРЕЗ 2 МЕСЯЦА !!!<br>
+рекламу на ютубе не блочит, лучше пользоваться AdBlock-ом.<br>
+но зато предоставляет детальную статистику запросов.<br>
+
+управление через sqlite3:<br>
+запуск <b>sudo sqlite3 /etc/pihole/gravity.db</b><br>
+получить название столбцов таблицы <b>PRAGMA table_info('group');</b><br>
+получить все данные из таблицы <b>SELECT * FROM "group";</b><br>
+включить определенную группу  <b>UPDATE 'group' SET enabled = 1 WHERE name = 'rusikokWorkGroup';</b><br>
+выключить определенную группу <b>UPDATE 'group' SET enabled = 0 WHERE name = 'rusikokWorkGroup';</b><br>
+sudo crontab -e -> 0 7 * * * sudo sqlite3 /etc/pihole/gravity.db "UPDATE 'group' SET enabled = 1 WHERE name = 'rusikokWorkGroup';" ; /usr/local/bin/pihole restartdns reload-lists >/dev/null<br>
 <br>
 ссылки:<br>
 <a href="https://interface31.ru/tech_it/2021/04/sozdaem-sobstvennyy-filtruyushhiy-dns-server-na-baze-pi-hole.html">Создаем собственный фильтрующий DNS-сервер на базе Pi-hole</a><br>
 <a href="https://github.com/pi-hole/pi-hole/#one-step-automated-install">Pi-hole</a><br>
+<a href="https://discourse.pi-hole.net/t/activate-group-with-cron/32660">Activate group with cron</a><br>
+<a href="https://habr.com/ru/articles/468621/">Переводим на DoH домашнюю сеть, или еще один щелчок по носу фильтрации</a><br>
 
 <h1>HARD</h1>
 

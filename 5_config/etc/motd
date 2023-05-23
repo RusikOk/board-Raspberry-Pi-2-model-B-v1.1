@@ -1,0 +1,29 @@
+ __________________________________________________
+(  )                                            (  )
+ )(   ____  __   __  ____  __  ___ __ _ __  ___  )(
+(  ) (  _ \(  ) (  )(  __)(  )(  /(  ) (  )(  / (  )
+ )(   )   / )(   )(  )_ (  )(  )(  )(   )(  )(   )(
+(  ) (_)\_)(__)_(__)(____)(__)(__\(__)_(__)(__\ (  )
+ )(                                              )(
+(__)____________________________________________(__)
+
+Active servers ports:
+    ssh			listen in 22 port
+    ser2net 		listen in 2000 port
+    JLinkRemoteServer 	listen in 19020 port
+    
+ser2net command set:
+    systemctl status ser2net - service status check
+    sudo service ser2net stop
+    sudo service ser2net start
+
+Custom jLink command set:
+    JLinkExe -> q - check connecting jLink
+    systemctl status jlink - service status check
+
+Custom log file command set:
+    log.sh RTT -> Ctrl+C - view in real time the last file with the "RTT" prefix
+    log.sh tty -> Ctrl+C - view in real time the last file with the "tty" prefix
+
+Copyright (c) 2023-04-17 RusikOk
+
