@@ -284,8 +284,8 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 устанавливаем службу OpenVPN <b>sudo apt-get install openvpn</b><br>
 проверяем правильность хода RTC <b>date</b><br>
 настраиваем часовой пояс если нужно <b>sudo dpkg-reconfigure tzdata</b><br>
-меняем текущий каталог <b>cd /etc/openvpn</b><br>
-переносим файлы настроек в каталог <b>/etc/openvpn</b><br>
+меняем текущий каталог <b>cd /etc/openvpn/client</b><br>
+переносим файлы настроек в каталог <b>/etc/openvpn/client</b><br>
 обязательно переименовуем файл конфига <b>sudo mv rpi2.ovpn rpi2.conf</b><br>
 сменим текущий каталог <b>cd /etc/openvpn</b><br>
 запускаем в ручном режиме и смотрим, нет ли ошибок <b>sudo openvpn --config /etc/openvpn/rpi2.conf</b><br>
@@ -324,17 +324,17 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 <a href="http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter">Turning the Raspberry Pi Into an FM Transmitter</a><br>
 
 <h2>DNS сервер Pi-hole</h2>
-не особо полезная штука. ФЛЕШКА СДОХЛА ЧЕРЕЗ 2 МЕСЯЦА !!!<br>
+не особо полезная штука. <b>ФЛЕШКА СДОХЛА ЧЕРЕЗ 2 МЕСЯЦА !!!</b><br>
 рекламу на ютубе не блочит, лучше пользоваться AdBlock-ом.<br>
 но зато предоставляет детальную статистику запросов.<br>
-
+<br>
 управление через sqlite3:<br>
 запуск <b>sudo sqlite3 /etc/pihole/gravity.db</b><br>
 получить название столбцов таблицы <b>PRAGMA table_info('group');</b><br>
 получить все данные из таблицы <b>SELECT * FROM "group";</b><br>
 включить определенную группу  <b>UPDATE 'group' SET enabled = 1 WHERE name = 'rusikokWorkGroup';</b><br>
 выключить определенную группу <b>UPDATE 'group' SET enabled = 0 WHERE name = 'rusikokWorkGroup';</b><br>
-sudo crontab -e -> 0 7 * * * sudo sqlite3 /etc/pihole/gravity.db "UPDATE 'group' SET enabled = 1 WHERE name = 'rusikokWorkGroup';" ; /usr/local/bin/pihole restartdns reload-lists >/dev/null<br>
+упревление группами по расписанию <b>sudo crontab -e</b> -> <b>0 7 * * * sudo sqlite3 /etc/pihole/gravity.db "UPDATE 'group' SET enabled = 1 WHERE name = 'rusikokWorkGroup';" ; /usr/local/bin/pihole restartdns reload-lists >/dev/null<br></b>
 <br>
 ссылки:<br>
 <a href="https://interface31.ru/tech_it/2021/04/sozdaem-sobstvennyy-filtruyushhiy-dns-server-na-baze-pi-hole.html">Создаем собственный фильтрующий DNS-сервер на базе Pi-hole</a><br>
@@ -349,7 +349,9 @@ sudo crontab -e -> 0 7 * * * sudo sqlite3 /etc/pihole/gravity.db "UPDATE 'group'
 <a href="https://pinout.xyz/#">отличная шпора по пинам</a><br>
 
 <h2>OLED на контроллере SSD1306</h2>
-запуск скрипта вручную: <b>python3 rusikok_oled_menu.py</b><br>
+устанавливаем какую то хрень для питона: <b>sudo apt-get install python3-pip</b><br>
+устанавливаем питоновские либы для SSD1306: <b>sudo pip3 install adafruit-circuitpython-ssd1306</b><br>
+запуск скрипта вручную: <b>python3 /usr/local/bin/rusikok_oled_menu.py</b><br>
 в самом конце файла <b>/etc/rc.local</b> добавляем вызов скрипта в фоновом режиме после загрузки:<br>
 
 ```ini
@@ -370,6 +372,8 @@ python3 /usr/local/bin/rusikok_oled_menu.py &
 установка часового пояса: <b>sudo timedatectl set-timezone Europe/Kiev</b><br>
 все доступные часовые пояса в системе можно подсмотреть в директории: <b>/usr/share/zoneinfo</b><br>
 <img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/DS3231/DS3231toRPI.webp" alt="подключение часов к RPi">
+активация I2С модуля <b>sudo raspi-config -> Interfacing Options -> I2С -> Yes -> [Entertop] -> Finish</b><br>
+устанавливаем софт для диагностики I2С: <b>sudo apt-get install i2c-tools</b><br>
 проверка правильности подключения часов. адрес 0x68: <b>i2cdetect -y 1</b><br>
 сейчас можно вычитать всю память микросхемы: <b>i2cdump -y 1 0x68</b><br>
 проверить наличие драйвера: <b>/lib/modules/5.10.17-v7+/kernel/drivers/rtc/rtc-ds1307.ko</b> да! странно но для DS3231 драйвер называется именно так<br>
@@ -388,7 +392,7 @@ dtoverlay=i2c-rtc,ds3231
 удаляем пакет фейк часов: <b>sudo apt-get remove fake-hwclock</b><br>
 удаляем сценарий инициализации: <b>sudo update-rc.d -f fake-hwclock remove</b><br>
 отключаем службу фейк часов: <b>sudo systemctl disable fake-hwclock</b><br>
-привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/5_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a><br>
+привести файл <b>/lib/udev/hwclock-set</b> в соответствие этому <a href="5_config/lib/udev/hwclock-set">ПРИМЕР КОНФИГА</a><br>
 проверить состояние аппаратных часов: <b>sudo hwclock --verbose -r</b><br>
 посмотреть время из RTC: <b>sudo hwclock</b><br>
 обновить системное время данными из RTC: <b>sudo hwclock --hctosys</b><br>
