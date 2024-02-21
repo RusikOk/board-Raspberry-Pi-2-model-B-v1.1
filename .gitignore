@@ -48,16 +48,21 @@ __Previews/
 
 # IAR
 *.sim
+*.xcl
+*.pbi
 *.pbi.xcl
+*.pbi.dep
+*.pbd
 *.pbd.tmp
 *.pbd.linf
 *.pbd.browse
-*.pbd
-*.pbi
 *.pbw
 *.out
 *.map
 *.o
+*.ninja
+.ninja_log
+.ninja_deps
 
 # rusikok
 *.img
