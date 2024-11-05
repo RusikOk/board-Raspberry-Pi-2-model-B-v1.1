@@ -16,7 +16,7 @@
 enable_uart=1
 ```
 
-ссылки:<br>
+references:<br>
 <a href="https://elinux.org/RPi_Serial_Connection#Preventing_Linux_using_the_serial_port">полное описание проблемы с UART в моделях малины с блютуз модулями</a><br>
 <a href="http://wikihandbk.com/wiki/Raspberry_Pi:%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0/config.txt">Raspberry Pi:Настройка/config.txt</a><br>
 
@@ -36,7 +36,7 @@ sudo raspi-config -> Interfacing Options -> SSH -> Yes -> [Entertop] -> Finish
 разрабы в очередной раз решили подмешать говна и заставляют теперь создавать собственную пару пользователь/пароль. если у вас нет монитора то нужно создать файлик <b>userconf.txt</b> в корне загрузочного раздела и вписать туда логин и зашифрованный пароль через двоеточие <b>pi:encrypted- password</b>
 для получения зашифрованного пароля через другую расбери введите команду: <b>echo 'mypassword' | openssl passwd -6 -stdin</b>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/">An update to Raspberry Pi OS Bullseye</a><br>
 
 <h2>установка стандартного для меня софта и настроек</h2>
@@ -74,7 +74,7 @@ tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gi
 перезагружаемся <b>sudo reboot</b><br>
 по желанию редактируем приветствие консоли <b>/etc/motd</b><br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://romantelychko.com/blog/1611/">Установка и оптимизация Raspbian на Raspberry Pi</a><br>
 <a href="https://zalinux.ru/?p=3047">Какие файлы можно удалить при нехватке места на диске Linux</a><br>
 
@@ -86,7 +86,7 @@ tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gi
 состояние тротлинга ядра: <b>vcgencmd get_throttled | cut -f2 -d=</b><br>
 аптайм системы: <b>uptime | awk -F'( |,|:)+' '{d=h=m=0; if($7=="min") m=$6; else { if($7~/^day/) { d=$6; h=$8; m=$9 } else if($9=="min") { h=0; m=$8 } else { h=$6; m=$7 }}} {printf("%03u days, %02u:%02u", d, h, m)}'</b><br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://elinux.org/RPI_vcgencmd_usage">описание команд</a><br>
 <a href="https://github.com/bamarni/pi64/issues/4#issuecomment-292707581">скрипт мониторинга</a><br>
 
@@ -97,13 +97,29 @@ tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gi
 отмена запланированных действий: <b>sudo shutdown -с</b><br>
 перезагрузить сейчас: <b>sudo shutdown -r now</b><br>
 
+<h2>управление питанием USB портов</h2>
+установка:
+
+```ini
+sudo apt-get update
+sudo apt-get install git gcc libusb-dev
+git clone https://github.com/codazoda/hub-ctrl.c
+gcc -o hub-ctrl hub-ctrl.c -lusb
+```
+
+выключаем порт: <b>sudo ./hub-ctrl.c/hub-ctrl -h 0 -P 2 -p 0</b><br>
+включаем порт: <b>sudo ./hub-ctrl.c/hub-ctrl -h 0 -P 2 -p 1</b><br>
+<br>
+references:<br>
+<a href="https://forums.raspberrypi.com/viewtopic.php?f=29&t=93463&sid=6929e91c90e8638ca535a2a855460d9d&start=25#p998028">Raspberry Pi B+ turn usb power off</a><br>
+
 <h2>для удобного переброса файлов через SSH терминал</h2>
 установка пакета: <b>sudo apt-get install lrzsz</b><br>
 получение файла: <b>sz [filename]</b><br>
 отправка файла: <b>rz</b><br>
 также можно просто перетянуть файл в терминал<br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://russianblogs.com/article/7328815997/">Лучший способ закачивать и скачивать файлы Linux под Windows</a><br>
 
 <h2>запуск J-Link Remote Server УСТАРЕЛО !!!</h2>
@@ -124,7 +140,7 @@ tmpfs           /var/spool/mqueue   tmpfs   defaults,noatime,nosuid,mode=0700,gi
 # rusikok jLink remote server start
 /home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/jLinkRS/%Y-%m-%d_%H-%M.log") &
 ```
-ссылки:<br>
+references:<br>
 <a href="https://blog.feabhas.com/2019/07/using-a-raspberry-pi-as-a-remote-headless-j-link-server/">Using a Raspberry Pi as a remote headless J-Link Server</a>
 <br>
 <a href="https://forum.segger.com/index.php/Thread/5693-SOLVED-J-Link-Remote-Server-on-Raspberry-Pi/">J-Link Remote Server on Raspberry-Pi</a>
@@ -175,7 +191,7 @@ systemd-analyze - Выводит хронометраж процесса заг�
 systemd-analyze blame - Вывести время, которое потребовалось для загрузки каждого из юнитов<br>
 systemd-analyze critical-chain - Вывести цепочку юнитов с наибольшим временем загрузки<br>
 
-ссылки:<br>
+references:<br>
 <a href="https://habr.com/ru/post/535872/">Почему хабражители предпочитают велосипеды, вместо готовых решений? Или о systemd, part 0</a><br>
 <a href="https://habr.com/ru/post/535930/">Systemd для продолжающих. Part 1 — Запуск юнитов по временным событиям</a><br>
 <a href="https://habr.com/ru/post/536040/">Systemd для продолжающих. Part 2 — Триггеры на различные события</a><br>
@@ -197,7 +213,7 @@ cat /dev/ttyUSB0 > $(date +"/home/pi/ttyUSB0_%Y-%m-%d_%H-%M.log") &
 stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 ```
 
-ссылки:<br>
+references:<br>
 <a href="https://qastack.ru/unix/242778/what-is-the-easiest-way-to-configure-serial-port-on-linux">самый простой способ настроить последовательный порт в Linux</a><br>
 <a href="https://www.cyberforum.ru/shell/thread1948807.html">Перенаправление потока в файл</a><br>
 
@@ -207,7 +223,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 перезагружаем службу <b>sudo service ser2net start</b><br>
 подключаемся через telnet на 2000 порт с другой win машины и смотрим на вывод <b>telnet 192.168.0.7 2000</b><br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="http://security-corp.org/os/linux/892-probros-com-portov-iz-linux-v-windows.html">Проброс COM-портов из Linux в Windows</a><br>
 <a href="https://networklessons.com/network-management/raspberry-pi-as-cisco-console-server/">Raspberry Pi as Cisco Console Server</a><br>
 <a href="https://linux.die.net/man/8/ser2net">ser2net(8) - Linux man page</a><br>
@@ -219,7 +235,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 посмотреть открытые порты <b>sudo netstat -tulpn</b><br>
 смотреть открытые порты в реальном времени <b>sudo watch netstat -tulpn</b><br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://wiki.merionet.ru/servernye-resheniya/32/smotrim-otkrytye-porty-linux/">Смотрим открытые порты Linux</a><br>
 
 <h2>сеть WLAN</h2>
@@ -233,7 +249,7 @@ stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb
 посмотреть параметры Wi-Fi подключения <b>iwconfig</b><br>
 увеличим мощность передатчика до 30dBm. в файле <b>/etc/wpa_supplicant/wpa_supplicant.conf</b> меняем 3ю строчку на <b>country=BZ</b><br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://vpautinu.com/wifi/raspberry-pi">Подключение и настройка интернета Wi-Fi на Raspberry Pi</a><br>
 <a href="https://www.raspberrypi.com/documentation/computers/configuration.html#adding-the-network-details-to-your-raspberry-pi">Adding the Network Details to your Raspberry Pi</a><br>
 <a href="https://hackware.ru/?p=4125">Как увеличить мощность (TX Power) Wi-Fi</a><br>
@@ -264,7 +280,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 отключаемся <b>sudo sakis3g disconnect</b><br>
 <b>Примечание ! </b>После дисконнекта 3G, OpenVPN туннель тоже падает и не подымается даже если в локалке есть инет.<br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://kotvaska.medium.com/internet-for-raspbery-pi-abcc46ff24f1">Internet for Raspberry Pi</a><br>
 <a href="https://robocraft.ru/blog/electronics/3131.html">Raspberry Pi. Установка и настройка комплекта MTC Коннект 4 (модем Huawei E171) на Raspbian</a><br>
 <a href="https://onedev.net/post/904">Настройка 3G/GPRS интернета утилитой Sakis3g на GSM модеме Huawei E1550</a><br>
@@ -294,13 +310,13 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 смотрим запустилась служба или нет <b>service --status-all</b><br>
 проверяем состояние туннеля и его IP <b>ip a</b><br>
 <br>
-ссылки по настройке сервера:<br>
+references по настройке сервера:<br>
 <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/vdoc_pub_openvpn_building_and_integrating_virtual_private_networks.pdf">книга по OpenVPN</a><br>
 <a href="https://winitpro.ru/index.php/2021/12/28/ustanovka-openvpn-servera-windows/">Установка и настройка OpenVPN сервера под Windows</a><br>
 <a href="https://internet-lab.ru/windows_openvpn_2_5_1">OpenVPN 2.5.1 сервер на Windows</a><br>
 <a href="https://habr.com/ru/post/273371/">Подробная инструкция по OpenVPN v2.3.8 на Windows server 2008R2</a><br>
 <a href="https://www.linux.org.ru/forum/admin/11912037">настроить маршрутизацию для openvp</a><br>
-ссылки по настройке клиента:<br>
+references по настройке клиента:<br>
 <a href="https://openvpn.net/community-downloads/">загрузка клиент/серверных программ</a><br>
 <a href="https://www.ovpn.com/en/guides/raspberry-pi-raspbian">Install OpenVPN for Raspbian</a><br>
 <a href="https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-linux/">Connecting to Access Server with Linux</a><br>
@@ -309,7 +325,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 <h2>настройка клиентского L2TP подключения VPN ЕЩЕ НЕ ЗАПУСКАЛ</h2>
 регистрируем бесплатный аккаунт <a href="http://lan2lan.ru">lan2lan.ru</a>, создаем пару пользователей<br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://www.umgum.com/debian-linux-l2tp-ipsec">Linux Debian + L2TP + IPsec</a><br>
 <a href="https://adminvps.ru/blog/ustanovka-i-nastrojka-l2tp-ipsec-na-debian-ubuntu-iphone-mac-dlya-vpn/">Установка и настройка l2tp + ipsec на Debian</a><br>
 
@@ -320,7 +336,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 запускаем трансляцию <b>./pifm sound.wav 103.0 22050 stereo</b><br>
 к слову звук очень противный и не качественный. еще и полоса пропускания очень широкая занимает аж под 2МГц.<br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter">Turning the Raspberry Pi Into an FM Transmitter</a><br>
 
 <h2>DNS сервер Pi-hole</h2>
@@ -336,7 +352,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 выключить определенную группу <b>UPDATE 'group' SET enabled = 0 WHERE name = 'rusikokWorkGroup';</b><br>
 упревление группами по расписанию <b>sudo crontab -e</b> -> <b>0 7 * * * sudo sqlite3 /etc/pihole/gravity.db "UPDATE 'group' SET enabled = 1 WHERE name = 'rusikokWorkGroup';" ; /usr/local/bin/pihole restartdns reload-lists >/dev/null<br></b>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://interface31.ru/tech_it/2021/04/sozdaem-sobstvennyy-filtruyushhiy-dns-server-na-baze-pi-hole.html">Создаем собственный фильтрующий DNS-сервер на базе Pi-hole</a><br>
 <a href="https://github.com/pi-hole/pi-hole/#one-step-automated-install">Pi-hole</a><br>
 <a href="https://discourse.pi-hole.net/t/activate-group-with-cron/32660">Activate group with cron</a><br>
@@ -359,7 +375,7 @@ cкачиваем утилиту sakis3g для быстрой настройк�
 python3 /usr/local/bin/rusikok_oled_menu.py &
 ```
 
-ссылки:<br>
+references:<br>
 <a href="https://learn.adafruit.com/adafruit-pioled-128x32-mini-oled-for-raspberry-pi/usage">мануал</a><br>
 <a href="https://github.com/adafruit/Adafruit_CircuitPython_SSD1306/tree/master/examples">примеры</a><br>
 
@@ -399,7 +415,7 @@ dtoverlay=i2c-rtc,ds3231
 записать системное время в RTC: <b>sudo hwclock --systohc</b><br>
 по желанию можно отключить NTP но я не стал: <b>sudo update-rc.d ntp disable</b><br>
 <br>
-ссылки:<br>
+references:<br>
 <a href="https://arduinoplus.ru/rtc-raspberry-pi/">Как добавить модуль RTC к Raspberry Pi</a><br>
 <a href="https://onxblog.com/2019/03/30/raspberry-pi-hw-clock-ds3231/">Часы реального времени DS3231 PI</a><br>
 <a href="https://blablacode.ru/linux/581">I2c в Linux из пространства пользователя</a><br>
