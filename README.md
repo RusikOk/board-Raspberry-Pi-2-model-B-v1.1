@@ -149,11 +149,11 @@ references:<br>
 
 <h2>установка J-Link Remote Server</h2>
 <b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
-качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_V760g_arm.deb">32-bit Linux ARM DEB Installer</a> <br>
+качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_V812e_arm.deb">32-bit Linux ARM DEB Installer</a> <br>
 копируем в каталог <b>/home/pi/</b> скачанный дистрибутив<br>
 синхронизация: <b>sudo apt-get update</b><br>
 обновление пакетов системы: <b>sudo apt-get upgrade</b><br>
-устанавливаем <b>sudo apt-get install /home/pi/JLink_Linux_V760g_arm.deb</b> -> y -> I <br>
+устанавливаем <b>sudo apt-get install /home/pi/JLink_Linux_V812e_arm.deb</b> -> y -> I <br>
 удаляем пакет <b>rm /home/pi/JLink_Linux_V760g_arm.deb</b> <br>
 подключаем J-Link по USB <br>
 проверяем J-Link в списке USB устройств <b>lsusb</b> должны увидеть что-то типа SEGGER J-Link PLUS<br>
@@ -166,7 +166,45 @@ references:<br>
 создаем файл <b>/etc/systemd/system/jlink.service</b> <br>
 
 ```service
+# конфиг для сервиса автоматически запускающего jLink remote server
+# (c) 2022-02-02 RusikOk
 
+[Unit]
+# описание нашего сервиса
+Description=SEGGER J-Link Remote Server by RusikOk
+# будем запускать юнит после какого-либо сервиса или группы сервисов
+After=multi-user.target
+
+[Service]
+# Пользователь и группа, с правами которых будет запускаться сервис
+User=root
+Group=root
+# тип сервиса
+Type=simple
+#Type=notify
+
+# рабочий каталог, он делается текущим перед запуском стартап команд
+WorkingDirectory=/usr/bin
+# команда на запуск сервиса
+ExecStart=/usr/bin/JLinkRemoteServerCLExe -Port 19020
+# В каких случаях сервис будет автоматически перезагружаться. on-failure — в случае выхода с ненулевым кодом возврата. always - Попросим systemd автоматически рестартовать наш сервис, если он вдруг перестанет работать. Контроль ведется по наличию процесса из PID файла
+Restart=on-failure
+# Таймаут перед загрузкой сервиса, после падения.
+RestartSec=1
+# Таймаут в секундах, сколько ждать system отработки старт/стоп команд.
+TimeoutSec=5
+
+#NotifyAccess=all
+# Директива задаёт период ожидания сигналов от сервиса.
+#WatchdogSec=20
+
+# Capablities для сервиса. В данном случае - разрешение сервису биндиться на привилегированные порты (< 1000)
+#AmbientCapablities=CAP_NET_BIND_SERVICE
+# включаем режим отладки
+Environment=SYSTEMD_LOG_LEVEL=debug
+
+[Install]
+WantedBy=multi-user.target
 ```
 
 перезагрузка <b>sudo systemctl daemon-reload</b> <br>
@@ -433,3 +471,17 @@ references:<br>
 <a href="https://www.siver.technology/products/raspberry-pi-4-to-din-rail-mount">более универсальный вариант</a><br>
 
 <img src="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/9_photo/box2/%D0%9A%D1%80%D0%B5%D0%BF%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20Raspberry%20PI%204%20%D0%BD%D0%B0%20DIN%20%D1%80%D0%B5%D0%B9%D0%BA%D1%83.100.png"><br>
+
+
+
+
+
+<h1>Orange Pi Lite</h1>
+http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/details/Orange-Pi-Lite.html
+https://www.armbian.com/orange-pi-lite/
+sudo apt-get install wpasupplicant
+sudo apt-get install wireless-tools
+http://hamlab.net/mcu/orangepi/orangepi_zero_network.html
+https://forum.armbian.com/topic/3857-how-to-disable-swap/
+https://parglescouk.wordpress.com/2016/08/30/shutting-down-an-orange-pi-from-the-on-board-button/
+http://www.orangepi.org/orangepibbsen/forum.php?mod=viewthread&tid=2460

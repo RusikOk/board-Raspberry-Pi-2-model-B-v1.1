@@ -5,27 +5,35 @@
 # описание нашего сервиса
 Description=SEGGER J-Link Remote Server by RusikOk
 # будем запускать юнит после какого-либо сервиса или группы сервисов
-Wants=network-online.target
-After=network-online.target
+After=multi-user.target
 
 [Service]
 # Пользователь и группа, с правами которых будет запускаться сервис
-User=pi
-Group=pi
+User=root
+Group=root
 # тип сервиса
 Type=simple
+#Type=notify
+
 # рабочий каталог, он делается текущим перед запуском стартап команд
-#WorkingDirectory=/home/pi/JLink_Linux_V696_arm
+WorkingDirectory=/usr/bin
 # команда на запуск сервиса
-ExecStart=/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020
-# В каких случаях сервис будет автоматически перезагружаться. on-failure — в случае выхода с ненулевым кодом возврата.
+ExecStart=/usr/bin/JLinkRemoteServerCLExe -Port 19020
+# В каких случаях сервис будет автоматически перезагружаться. on-failure — в случае выхода с ненулевым кодом возврата. always - Попросим systemd автоматически рестартовать наш сервис, если он вдруг перестанет работать. Контроль ведется по наличию процесса из PID файла
 Restart=on-failure
 # Таймаут перед загрузкой сервиса, после падения.
-RestartSec=5
+RestartSec=1
+# Таймаут в секундах, сколько ждать system отработки старт/стоп команд.
+TimeoutSec=5
+
+#NotifyAccess=all
+# Директива задаёт период ожидания сигналов от сервиса.
+#WatchdogSec=20
+
 # Capablities для сервиса. В данном случае - разрешение сервису биндиться на привилегированные порты (< 1000)
 #AmbientCapablities=CAP_NET_BIND_SERVICE
 # включаем режим отладки
 Environment=SYSTEMD_LOG_LEVEL=debug
 
 [Install]
-WantedBy=multiuser.target
+WantedBy=multi-user.target
