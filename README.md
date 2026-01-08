@@ -34,7 +34,7 @@ sudo raspi-config -> Interfacing Options -> SSH -> Yes -> [Entertop] -> Finish
 Чтобы изменить пароль пользователя root в Raspberry Pi, выполните: <b>sudo passwd root</b>
 
 разрабы в очередной раз решили подмешать говна и заставляют теперь создавать собственную пару пользователь/пароль. если у вас нет монитора то нужно создать файлик <b>userconf.txt</b> в корне загрузочного раздела и вписать туда логин и зашифрованный пароль через двоеточие <b>pi:encrypted- password</b>
-для получения зашифрованного пароля через другую расбери введите команду: <b>echo 'mypassword' | openssl passwd -6 -stdin</b>
+для получения зашифрованного пароля через другую расбери введите команду: <b>echo 'mypassword' | openssl passwd -6 -stdin</b><br>
 <br>
 references:<br>
 <a href="https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/">An update to Raspberry Pi OS Bullseye</a><br>
@@ -121,31 +121,6 @@ references:<br>
 <br>
 references:<br>
 <a href="https://russianblogs.com/article/7328815997/">Лучший способ закачивать и скачивать файлы Linux под Windows</a><br>
-
-<h2>запуск J-Link Remote Server УСТАРЕЛО !!!</h2>
-<b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
-качаем последний дистрибутив <a href="https://www.segger.com/downloads/jlink/JLink_Linux_arm.tgz">J-Link utilities</a> <br>
-роспаковуем в каталог пользователя /home/pi/JLink_Linux_V696_arm <br>
-на всякий случай читаем	README.txt <br>
-добавляем правила <b>sudo cp 99-jlink.rules /etc/udev/rules.d/</b><br>
-теперь можно грохнуть скачанный архив <br>
-ребутаем малину <b>sudo reboot</b><br>
-подключаем J-Link <br>
-проверяем J-Link в списке USB устройств <b>lsusb</b> должны увидеть что-то типа SEGGER J-Link PLUS<br>
-подключаем jLink по USB, проверяем подключение <b>./JLink_Linux_V696_arm/JLinkExe</b> -> q <br>
-запускаем jLink Remote Server <b>sudo ./JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020</b> -> q <br>
-в самом конце файла <b>/etc/rc.local</b> добавляем автозапуск программы в фоновом режиме:<br>
-
-```ini
-# rusikok jLink remote server start
-/home/pi/JLink_Linux_V696_arm/JLinkRemoteServerCLExe -Port 19020 > $(date +"/var/log/jLinkRS/%Y-%m-%d_%H-%M.log") &
-```
-references:<br>
-<a href="https://blog.feabhas.com/2019/07/using-a-raspberry-pi-as-a-remote-headless-j-link-server/">Using a Raspberry Pi as a remote headless J-Link Server</a>
-<br>
-<a href="https://forum.segger.com/index.php/Thread/5693-SOLVED-J-Link-Remote-Server-on-Raspberry-Pi/">J-Link Remote Server on Raspberry-Pi</a>
-<br>
-<a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/jLink%20manual%20UM08001.pdf">J-Link User Manual</a>
 
 <h2>установка J-Link Remote Server</h2>
 <b>К СОЖАЛЕНИЮ НЕ РАБОТАЕТ НА Raspberry Pi 1 Segmentation Fault</b><br>
@@ -324,7 +299,7 @@ references:<br>
 <a href="https://onedev.net/post/904">Настройка 3G/GPRS интернета утилитой Sakis3g на GSM модеме Huawei E1550</a><br>
 <a href="https://onedev.net/post/916">Переключение режима USB модема из Mаss Storage в GSM modem в Linux</a><br>
 
-<h2>настройка клиентского OpenVPN подключения</h2>
+<h2>настройка OpenVPN подключения</h2>
 <h3>на стороне сервера</h3>
 собственно саму настройку OpenVPN сервера оставим за скобками<br>
 запускаем <b>c:\Program Files\OpenVPN\easy-rsa\EasyRSA-Start.bat</b><br>
@@ -346,7 +321,10 @@ references:<br>
 запускаем через системный демон <b>sudo openvpn --config /etc/openvpn/rpi2.conf --daemon</b><br>
 перезапускаем службу <b>sudo service openvpn restart</b><br>
 смотрим запустилась служба или нет <b>service --status-all</b><br>
-проверяем состояние туннеля и его IP <b>ip a</b><br>
+проверяем состояние туннеля и IP клиента <b>ip a</b><br>
+<h3>деинсталяция</h3>
+удаляем службу OpenVPN с удалением конфигурацилнных файлов <b>sudo apt-get purge openvpn</b><br>
+вручную удаляем файлы настроек и каталог <b>sudo rm -rf /etc/openvpn</b><br>
 <br>
 references по настройке сервера:<br>
 <a href="https://github.com/RusikOk/board-Raspberry-Pi-2-model-B-v1.1/blob/main/2_datasheet/vdoc_pub_openvpn_building_and_integrating_virtual_private_networks.pdf">книга по OpenVPN</a><br>
@@ -359,6 +337,15 @@ references по настройке клиента:<br>
 <a href="https://www.ovpn.com/en/guides/raspberry-pi-raspbian">Install OpenVPN for Raspbian</a><br>
 <a href="https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-linux/">Connecting to Access Server with Linux</a><br>
 <a href="https://bozza.ru/art-160.html">Команды OpenVPN</a><br>
+
+<h2>настройка Tailscale подключения</h2>
+админпанель <b>https://login.tailscale.com/admin/machines</b><br>
+устанавливаем службу Tailscale <b>curl -fsSL https://tailscale.com/install.sh | sh</b><br>
+запускаем в ручном режиме, получаем ссылку на присоединение к своей сети и переходим по ней <b>sudo tailscale up</b><br>
+проверяем состояние туннеля и IP клиента <b>ip a</b><br>
+<br>
+references по установке клиента:<br>
+<a href="https://tailscale.com/kb/1031/install-linux">Install Tailscale on Linux</a><br>
 
 <h2>настройка клиентского L2TP подключения VPN ЕЩЕ НЕ ЗАПУСКАЛ</h2>
 регистрируем бесплатный аккаунт <a href="http://lan2lan.ru">lan2lan.ru</a>, создаем пару пользователей<br>

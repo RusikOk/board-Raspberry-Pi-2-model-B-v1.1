@@ -1,0 +1,7 @@
+# rusikok source: https://forums.raspberrypi.com/viewtopic.php?p=2352466#p2352466
+deb http://archive.raspberrypi.org/debian/ buster main
+deb http://legacy.raspbian.org/raspbian/ buster main contrib non-free rpi
+# rusikok outdated repositories
+#deb http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi
+# Uncomment line below then 'apt-get update' to enable 'apt-get source'
+#deb-src http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi
